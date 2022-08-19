@@ -1,0 +1,1 @@
+{"version":3,"file":"gitpod-new-package.esm.js","sources":["../src/index.ts"],"sourcesContent":["export function sum(a: number, b: number): number {\n  return a + b;\n}\n"],"names":["sum","a","b"],"mappings":"SAAgBA,IAAIC,GAAWC;EAC7B,OAAOD,CAAC,GAAGC,CAAX;AACD;;;;"}

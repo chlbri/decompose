@@ -1,0 +1,69 @@
+{
+  "version": "0.1.1",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "engines": {
+    "node": ">=10"
+  },
+  "scripts": {
+    "start": "tsdx watch",
+    "build": "tsdx build",
+    "test": "jest",
+    "test-watch": "pnpm test --watch",
+    "prettier": "prettier --write \"src/**/*.{ts,tsx}\"",
+    "eslint": "eslint \"{src/**/*,App}.{ts,tsx}\"",
+    "lint": "pnpm run prettier && pnpm run eslint --fix",
+    "lint-watch": "onchange --await-write-finish 5500 \"**/*\" -- pnpm run lint",
+    "size": "size-limit",
+    "postpublish": "git fetch & git pull",
+    "prepublishOnly": "pnpm run build && pnpm run lint"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "prettier --write \"**/**.{ts,tsx,json,js,jsx,yml}\"",
+      "post-commit": "a"
+    }
+  },
+  "name": "gitpod-new-package",
+  "author": "chlbri",
+  "module": "dist/gitpod-new-package.esm.js",
+  "size-limit": [
+    {
+      "path": "dist/gitpod-new-package.cjs.production.min.js",
+      "limit": "10 KB"
+    },
+    {
+      "path": "dist/gitpod-new-package.esm.js",
+      "limit": "10 KB"
+    }
+  ],
+  "devDependencies": {
+    "@bemedev/npm-publish": "0.0.1-pnpm2",
+    "@size-limit/preset-small-lib": "^8.0.1",
+    "@swc/core": "^1.2.233",
+    "@swc/jest": "^0.2.22",
+    "@types/jest": "^28.1.6",
+    "@types/node": "^18.7.3",
+    "@types/rollup": "^0.54.0",
+    "@typescript-eslint/eslint-plugin": "^5.33.0",
+    "@typescript-eslint/parser": "^5.33.0",
+    "eslint": "^8.22.0",
+    "husky": "^8.0.1",
+    "jest": "27.5.0",
+    "jest-extended": "^3.0.2",
+    "onchange": "^7.1.0",
+    "prettier": "^2.7.1",
+    "size-limit": "^8.0.1",
+    "tsdx": "^0.14.1",
+    "tslib": "^2.4.0",
+    "typescript": "^4.7.4"
+  },
+  "wallaby": {
+    "slowTestThreshold": 200
+  }
+}
