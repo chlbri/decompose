@@ -34,8 +34,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "prettier --write \"**/**.{ts,tsx,json,js,jsx,yml}\"",
-      "post-commit": "a"
+      "pre-commit": "prettier --write \"**/**.{ts,tsx,json,js,jsx,yml}\""
     }
   },
   "name": "@bemedev/decompose",
