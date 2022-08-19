@@ -1,4 +1,4 @@
-import { EventFrom, Interpreter } from 'xstate';
+import { EventFrom, Interpreter, StateValue } from 'xstate';
 
 export type StateMatching<
   T extends Record<string, unknown> | string,
@@ -49,3 +49,5 @@ export type OmitEvent<
 > = LengthOf<TuplifyUnion<keyof EventFrom<T, K>>> extends 1
   ? () => unknown
   : (data: Omit<EventFrom<T>, 'type'>) => unknown;
+
+export type SValue = StateValue | string;
