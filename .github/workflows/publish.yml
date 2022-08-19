@@ -42,7 +42,6 @@ jobs:
         with:
           token: ${{ secrets.NPM_TOKEN }}
           greater-version-only: true
-          dry-run: true
 
       # - name: TODO => Notification
       #   run: echo 'TODO => Build a Notification pipeline'
