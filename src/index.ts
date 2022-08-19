@@ -1,3 +1,3 @@
-export function sum(a: number, b: number): number {
-  return a + b;
-}
+export * from './decompose';
+export * from './sortMap';
+export * from './types';

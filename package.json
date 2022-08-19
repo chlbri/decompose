@@ -14,7 +14,7 @@
     "start": "tsdx watch",
     "build": "tsdx build",
     "test": "jest",
-    "test-watch": "pnpm test --watch",
+    "test-watch": "pnpm test -- --watch",
     "prettier": "prettier --write \"src/**/*.{ts,tsx}\"",
     "eslint": "eslint \"{src/**/*,App}.{ts,tsx}\"",
     "lint": "pnpm run prettier && pnpm run eslint --fix",
@@ -42,6 +42,9 @@
       "limit": "10 KB"
     }
   ],
+  "peerDependencies": {
+    "xstate": "^4.33.2"
+  },
   "devDependencies": {
     "@bemedev/npm-publish": "0.0.1-pnpm2",
     "@size-limit/preset-small-lib": "^8.0.1",
@@ -61,7 +64,8 @@
     "size-limit": "^8.0.1",
     "tsdx": "^0.14.1",
     "tslib": "^2.4.0",
-    "typescript": "^4.7.4"
+    "typescript": "^4.7.4",
+    "xstate": "^4.33.2"
   },
   "wallaby": {
     "slowTestThreshold": 200
