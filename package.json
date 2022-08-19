@@ -29,7 +29,6 @@
     "eslint": "eslint \"{src/**/*,App}.{ts,tsx}\"",
     "lint": "pnpm run prettier && pnpm run eslint --fix",
     "lint-watch": "onchange --await-write-finish 5500 \"**/*\" -- pnpm run lint",
-    "size": "size-limit",
     "postpublish": "git fetch & git pull",
     "prepublishOnly": "pnpm run build && pnpm run lint"
   },
@@ -42,23 +41,12 @@
   "name": "@bemedev/decompose",
   "author": "chlbri",
   "module": "lib/decompose.esm.js",
-  "size-limit": [
-    {
-      "path": "lib/decompose.cjs.production.min.js",
-      "limit": "10 KB"
-    },
-    {
-      "path": "lib/decompose.esm.js",
-      "limit": "10 KB"
-    }
-  ],
   "peerDependencies": {
     "tslib": "^2.4.0",
     "typescript": "^4.7.4",
     "xstate": "^4.33.2"
   },
   "devDependencies": {
-    "@size-limit/preset-small-lib": "^8.0.1",
     "@swc/core": "^1.2.239",
     "@swc/jest": "^0.2.22",
     "@types/jest": "^28.1.7",
