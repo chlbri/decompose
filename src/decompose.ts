@@ -1,8 +1,9 @@
+import { StateValue } from 'xstate';
 import { DELIMITER } from './constants/strings';
 import { sortMap } from './sortMap';
-import { StateMatching, SValue } from './types';
+import { StateMatching } from './types';
 
-function ddecompose<T extends SValue>(val: T, prev = '') {
+function ddecompose(val: StateValue, prev = '') {
   const _prev = prev ? prev + DELIMITER : '';
   const output: string[] = [];
   prev !== '' && output.push(prev);
@@ -18,7 +19,7 @@ function ddecompose<T extends SValue>(val: T, prev = '') {
   return output;
 }
 
-export function decompose<T extends SValue>(
+export function decompose<T extends StateValue>(
   val: T,
   sorter?: (a: string, b: string) => number,
 ): readonly StateMatching<T>[] {
