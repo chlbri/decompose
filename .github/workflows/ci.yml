@@ -37,7 +37,7 @@ jobs:
         run: pnpm lint
 
       - name: Test
-        run: pnpm run test --ci --coverage --maxWorkers=2   
+        run: pnpm run test
 
 
   # clean:
