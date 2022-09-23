@@ -1,3 +1,4 @@
+import { expect, it } from 'vitest';
 import { decompose } from './decompose';
 
 it('String', () => {
