@@ -1,7 +1,6 @@
-import { StateValue } from 'xstate';
 import { DELIMITER } from './constants/strings';
 import { sortMap } from './sortMap';
-import { StateMatching } from './types';
+import { StateMatching, StateValue } from './types';
 
 function ddecompose(val: StateValue, prev = '') {
   const _prev = prev ? prev + DELIMITER : '';
