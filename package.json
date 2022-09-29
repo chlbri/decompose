@@ -1,19 +1,14 @@
 {
-  "version": "0.1.3",
+  "version": "0.1.4",
   "license": "MIT",
   "type": "module",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [
-    "lib",
-    "src"
+    "lib"
   ],
   "engines": {
     "node": ">=12"
-  },
-  "exports": {
-    "require": "./lib/index.cjs",
-    "default": "./lib/index.modern.js"
   },
   "scripts": {
     "config": "pnpm install",
