@@ -1,56 +1,88 @@
 {
-  "version": "0.1.6",
+  "name": "@bemedev/decompose",
+  "version": "0,2.0",
+  "description": "Test XState Machine sequentially",
+  "author": {
+    "email": "bri_lvi@icloud.com",
+    "name": "chlbri",
+    "url": "https://bemedev.vercel.app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "//TODO: to define"
+  },
   "license": "MIT",
+  "type": "module",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
-  "module": "lib/index.mjs",
+  "module": "lib/index.js",
+  "keywords": [
+    "For",
+    "creating",
+    "new",
+    "npm",
+    "package"
+  ],
   "files": [
-    "lib"
+    "lib",
+    "public"
   ],
   "engines": {
-    "node": ">=12"
+    "node": ">=20"
   },
   "scripts": {
     "config": "pnpm install",
-    "start": "pnpm run config && microbundle watch",
-    "build": "rm -rf lib && rollup -c",
-    "test": "vitest run",
+    "config:off": "pnpm run config --offline",
+    "ci": "pnpm run config:off && pnpm run lint && pnpm run test && pnpm run build",
+    "ci:online": "pnpm run config && pnpm run lint && pnpm run test && pnpm run build",
+    "ci:admin": "pnpm run rm && pnpm run ci:online",
+    "rollup": "rollup -c",
+    "build": "rm -rf lib && pnpm run rollup",
+    "rm": "rm -rf node_modules pnpm-lock.yaml",
+    "rinit": "pnpm run rm && pnpm run config",
+    "rinit:off": "pnpm run rm && pnpm run config:off",
+    "test": "pnpm run test:coverage --no-coverage",
+    "test:coverage": "vitest run --passWithNoTests",
+    "test:watch": "vitest --passWithNoTests",
     "remove": "rm -rf lib node_modules pnpm-lock.yaml",
     "clean": "pnpm run remove && pnpm run config",
-    "test-watch": "pnpm test -- --watch",
     "prettier": "prettier --write \"src/**/*.{ts,tsx}\"",
     "eslint": "eslint \"{src/**/*,App}.{ts,tsx}\"",
     "lint": "pnpm run prettier && pnpm run eslint --fix",
     "lint-watch": "onchange --await-write-finish 5500 \"**/*\" -- pnpm run lint",
-    "postpublish": "git fetch & git pull",
-    "prepublishOnly": "pnpm run build && pnpm run lint"
+    "prepublishOnly": "",
+    "prepare": "husky"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "prettier --write \"**/**.{ts,tsx,json,js,jsx,yml}\""
-    }
-  },
-  "name": "@bemedev/decompose",
-  "author": "chlbri",
   "devDependencies": {
-    "@types/node": "^18.7.6",
-    "@typescript-eslint/eslint-plugin": "^5.33.1",
-    "@typescript-eslint/parser": "^5.33.1",
-    "esbuild": "^0.15.9",
-    "eslint": "^8.22.0",
-    "husky": "^8.0.1",
+    "@bemedev/fsf": "^0.7.0",
+    "@bemedev/vitest-alias": "^0.0.2",
+    "@types/deep-diff": "^1.0.5",
+    "@types/node": "^20.12.8",
+    "@typescript-eslint/eslint-plugin": "^7.7.1",
+    "@typescript-eslint/parser": "^7.7.1",
+    "@vitest/coverage-v8": "^1.5.2",
+    "@xstate/immer": "^0.3.3",
+    "dequal": "^2.0.3",
+    "esbuild": "^0.20.2",
+    "eslint": "^8.57.0",
+    "glob": "^10.3.12",
+    "husky": "^9.0.11",
+    "immer": "^10.0.4",
     "onchange": "^7.1.0",
-    "prettier": "^2.7.1",
-    "rollup": "^2.79.1",
-    "rollup-plugin-dts": "^4.2.2",
-    "rollup-plugin-esbuild": "^4.10.1",
-    "rollup-plugin-terser": "^7.0.2",
-    "tslib": "^2.4.0",
-    "typescript": "^4.7.4",
-    "vite": "^3.1.3",
-    "vitest": "^0.23.4"
+    "prettier": "^3.2.5",
+    "pretty-quick": "^4.0.0",
+    "rollup": "^4.14.1",
+    "rollup-plugin-tsc-alias": "^1.1.2",
+    "rollup-plugin-typescript2": "^0.36.0",
+    "tslib": "^2.6.2",
+    "typescript": "^5.4.4",
+    "vitest": "^1.5.2",
+    "xstate": "^4.38.3",
+    "zod": "^3.23.4"
   },
-  "wallaby": {
-    "slowTestThreshold": 200
+  "dependencies": {
+    "@bemedev/decompose": "^0.1.6",
+    "@bemedev/usefull-functions": "^0.1.1",
+    "firebase": "^10.11.1"
   }
 }
