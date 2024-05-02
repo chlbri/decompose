@@ -1,1 +1,1 @@
-# Package NPM
+## Decompose object to string paths
