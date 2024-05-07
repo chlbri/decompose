@@ -6,7 +6,7 @@ export type StateMatching<
     ? Key extends string
       ? T[Key] extends Record<string, unknown>
         ? `${Key}.${StateMatching<T[Key]>}` | (Key & string)
-        : `${Key}.${T[Key] & string}` | (Key & string)
+        : (Key & string)
       : never
     : T;
 
