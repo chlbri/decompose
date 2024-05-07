@@ -1,6 +1,6 @@
 {
   "name": "@bemedev/decompose",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Decompose object to string paths",
   "author": {
     "email": "bri_lvi@icloud.com",
