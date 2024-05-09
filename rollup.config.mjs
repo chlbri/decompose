@@ -6,12 +6,13 @@ import tscAlias from 'rollup-plugin-tsc-alias';
 import typescript from 'rollup-plugin-typescript2';
 
 const input = Object.fromEntries(
-  globSync('src/**/*.ts', {
+  globSync('./src/**/*.ts', {
     ignore: [
       '**/*.test.ts',
+      '**/*.test-d.ts',
       '**/*.fixtures.ts',
       './src/config/**/*.ts',
-      'src/types.ts',
+      './src/types.ts',
     ],
   }).map(file => [
     // This remove `src/` as well as the file extension from each
@@ -34,6 +35,7 @@ export default defineConfig({
       tsconfigOverride: {
         exclude: [
           '**/*.test.ts',
+          '**/*.test-d.ts',
           'src/fixtures',
           'src/config',
           // 'src/types.ts',
@@ -42,7 +44,7 @@ export default defineConfig({
     }),
     tscAlias({}),
   ],
-  external: ['@xstate/immer', 'xstate', 'dequal', 'zod'],
+  external: ['ts-deepmerge'],
 
   output: [
     {
