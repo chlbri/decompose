@@ -11,9 +11,7 @@ const input = Object.fromEntries(
       '**/*.test.ts',
       '**/*.fixtures.ts',
       './src/config/**/*.ts',
-      '**/*.typegen.ts',
       'src/types.ts',
-      'src/machines/main/main.machine.types.ts',
     ],
   }).map(file => [
     // This remove `src/` as well as the file extension from each
@@ -35,7 +33,7 @@ export default defineConfig({
     typescript({
       tsconfigOverride: {
         exclude: [
-          'src/**/*.test.ts',
+          '**/*.test.ts',
           'src/fixtures',
           'src/config',
           // 'src/types.ts',

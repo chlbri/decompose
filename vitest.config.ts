@@ -3,7 +3,7 @@ import { defineConfig } from 'vitest/config';
 import tsconfig from './tsconfig.json';
 
 export default defineConfig({
-  plugins: [aliasTs(tsconfig as any)],
+  plugins: [aliasTs(tsconfig as never)],
 
   test: {
     environment: 'node',
@@ -12,7 +12,12 @@ export default defineConfig({
       enabled: true,
       extension: 'ts',
       all: true,
-      exclude: ['**/types.ts', '**/index.ts'],
+      include: [
+        'src/decompose.ts',
+        'src/helpers.ts',
+        'src/decomposeSV.ts',
+        'src/recompose.ts',
+      ],
       provider: 'v8',
     },
   },

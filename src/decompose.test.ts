@@ -1,72 +1,37 @@
-import { expect, it } from 'vitest';
+import { createTests } from '@bemedev/vitest-extended';
 import { decompose } from './decompose';
 
-it('String', () => {
-  expect(decompose('Hello World')).toEqual(['Hello World']);
-});
+const useTests = createTests(decompose);
 
-it('Simple object', () => {
-  const obj = {
-    a: 'Hello',
-    b: 'World',
-  };
-  expect(decompose(obj)).toEqual(['a', 'b', 'a.Hello', 'b.World']);
-});
-
-it('Complex object', () => {
-  const obj = {
-    a: 'Hello',
-    b: 'World',
-    c: {
-      d: 'Hello',
-      e: {
-        f: 'World',
-        g: 'Again',
+useTests(
+  ['Empty object', [{}], []],
+  ['Simple object', [{ age: 16, name: 'Alfred' }], ['age', 'name']],
+  [
+    'Recursive object',
+    [
+      {
+        _id: 'nanoid',
+        data: {
+          name: {
+            firstName: 'Charles-Lévi',
+            lastName: 'BRI',
+          },
+        },
+        statistics: {
+          updations: 5,
+          deletions: 34,
+        },
       },
-    },
-  };
-  expect(decompose(obj)).toEqual([
-    'a',
-    'b',
-    'c',
-    'a.Hello',
-    'b.World',
-    'c.d',
-    'c.e',
-    'c.d.Hello',
-    'c.e.f',
-    'c.e.g',
-    'c.e.f.World',
-    'c.e.g.Again',
-  ]);
-});
-
-it('Complex object with custom order', () => {
-  const obj = {
-    a: 'Hello',
-    b: 'World',
-    c: {
-      d: 'Hello',
-      e: {
-        f: 'World',
-        g: 'Again',
-      },
-    },
-  };
-
-  const actual = decompose(obj, (a, b) => a.localeCompare(b));
-  expect(actual).toEqual([
-    'a',
-    'a.Hello',
-    'b',
-    'b.World',
-    'c',
-    'c.d',
-    'c.d.Hello',
-    'c.e',
-    'c.e.f',
-    'c.e.f.World',
-    'c.e.g',
-    'c.e.g.Again',
-  ]);
-});
+    ],
+    [
+      '_id',
+      'data',
+      'data.name',
+      'data.name.firstName',
+      'data.name.lastName',
+      'statistics',
+      'statistics.deletions',
+      'statistics.updations',
+    ],
+  ],
+);

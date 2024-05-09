@@ -1,7 +1,7 @@
 {
   "name": "@bemedev/decompose",
   "version": "0.2.1",
-  "description": "Decompose object to string paths",
+  "description": "Decompose object and so more",
   "author": {
     "email": "bri_lvi@icloud.com",
     "name": "chlbri",
@@ -14,7 +14,7 @@
   "license": "MIT",
   "type": "module",
   "main": "lib/index.js",
-  "typings": "lib/index.d.ts",
+  "types": "lib/index.d.ts",
   "module": "lib/index.js",
   "keywords": [
     "For",
@@ -22,10 +22,6 @@
     "new",
     "npm",
     "package"
-  ],
-  "files": [
-    "lib",
-    "public"
   ],
   "engines": {
     "node": ">=20"
@@ -56,6 +52,7 @@
   "devDependencies": {
     "@bemedev/fsf": "^0.7.0",
     "@bemedev/vitest-alias": "^0.0.2",
+    "@bemedev/vitest-extended": "^0.3.3",
     "@types/deep-diff": "^1.0.5",
     "@types/node": "^20.12.8",
     "@typescript-eslint/eslint-plugin": "^7.7.1",
@@ -74,6 +71,7 @@
     "rollup": "^4.14.1",
     "rollup-plugin-tsc-alias": "^1.1.2",
     "rollup-plugin-typescript2": "^0.36.0",
+    "tsd": "^0.31.0",
     "tslib": "^2.6.2",
     "typescript": "^5.4.4",
     "vitest": "^1.5.2",
@@ -83,6 +81,7 @@
   "dependencies": {
     "@bemedev/decompose": "^0.1.6",
     "@bemedev/usefull-functions": "^0.1.1",
-    "firebase": "^10.11.1"
+    "firebase": "^10.11.1",
+    "ts-deepmerge": "^7.0.0"
   }
 }

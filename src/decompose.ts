@@ -1,31 +1,32 @@
 import { DELIMITER } from './constants/strings';
+import { isPrimitive } from './helpers';
 import { sortMap } from './sortMap';
-import { StateMatching, StateValue } from './types';
+import { Ru } from './types';
 
-function ddecompose(val: StateValue, prev = '') {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function ddecompose(val: any, prev = '') {
   const _prev = prev ? prev + DELIMITER : '';
   const output: string[] = [];
-  prev !== '' && output.push(prev);
-  if (typeof val === 'string') {
-    output.push(`${_prev}${val}`);
-  } else {
-    const keys = Object.keys(val);
-    output.push(
-      ...keys.map(key => ddecompose(val[key], `${_prev}${key}`)).flat(),
-    );
-  }
-
+  const entries1 = Object.entries(val);
+  entries1.forEach(([key, value]) => {
+    output.push(`${_prev}${key}`);
+    const isPrimit = isPrimitive(value);
+    if (!isPrimit) {
+      const values = ddecompose(value, `${_prev}${key}`);
+      output.push(...values);
+    }
+  });
   return output;
 }
 
-export function decompose<T extends StateValue>(
+export function decompose<T extends Ru>(
   val: T,
   sorter?: (a: string, b: string) => number,
-): readonly StateMatching<T>[] {
-  const first = ddecompose(val, '');
-  first.sort(sorter ?? sortMap(DELIMITER));
+) {
+  const output1 = ddecompose(val, '');
+  output1.sort(sorter ?? sortMap);
   const regex = new RegExp(DELIMITER, 'g');
-  const output = first.map(value => value.replace(regex, '.'));
+  const output2 = output1.map(value => value.replace(regex, '.'));
 
-  return Object.freeze(output) as StateMatching<T>[];
+  return Object.freeze(output2);
 }
