@@ -1,0 +1,1 @@
+{"version":3,"file":"decomposeKeys.d.ts","sourceRoot":"","sources":["../src/decomposeKeys.ts"],"names":[],"mappings":"AAGA,OAAO,EAAE,OAAO,EAAE,MAAM,WAAW,CAAC;AACpC,OAAO,KAAK,EAAE,YAAY,EAAE,EAAE,EAAE,MAAM,SAAS,CAAC;AAqBhD,wBAAgB,aAAa,CAC3B,CAAC,SAAS,EAAE,EACZ,aAAa,SAAS,OAAO,GAAG,IAAI,EACpC,GAAG,EAAE,CAAC,EAAE,MAAM,iBAAU,EAAE,aAAa,CAAC,EAAE,aAAa,2BAOxD"}

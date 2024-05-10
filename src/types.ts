@@ -1,14 +1,42 @@
 export type StateMatching<
-  T extends Record<string, unknown> | string,
+  T extends StateValue,
   Key = keyof T,
-> =
-  T extends Record<string, unknown>
-    ? Key extends string
-      ? T[Key] extends Record<string, unknown>
-        ? `${Key}.${StateMatching<T[Key]>}` | (Key & string)
-        : Key & string
-      : never
-    : T;
+> = T extends StateValueMap
+  ? Key extends string
+    ? T[Key] extends StateValueMap
+      ? `${Key}.${StateMatching<T[Key]>}` | Key
+      : `${Key}.${T[Key] & string}` | Key
+    : never
+  : T;
+
+export type KeysMatching<
+  T extends Ru,
+  AddObjectKeys extends boolean = true,
+  Key = keyof T,
+> = Key extends string
+  ? T[Key] extends Ru
+    ?
+        | `${Key}.${KeysMatching<T[Key], AddObjectKeys> & string}`
+        | (AddObjectKeys extends true ? Key : never)
+    : Key
+  : never;
+
+// #region Decompose
+type ToPaths<T, P extends string = ''> = T extends Ru
+  ? {
+      [K in keyof T]: ToPaths<T[K], `${P}${K & string}.`>;
+    }[keyof T]
+  : { path: P extends `${infer P}.` ? P : never; type: T };
+
+type FromPaths<T extends { path: string; type: unknown }> = {
+  [P in T['path']]: Extract<T, { path: P }>['type'];
+};
+
+/**
+ * From "Acid Coder"
+ */
+export type Decompose<T extends Ru> = FromPaths<ToPaths<T>>;
+// #endregion
 
 export type LengthOf<T> =
   T extends ReadonlyArray<unknown> ? T['length'] : number;

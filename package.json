@@ -1,6 +1,6 @@
 {
   "name": "@bemedev/decompose",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Decompose object and so more",
   "author": {
     "email": "bri_lvi@icloud.com",
@@ -57,14 +57,10 @@
     "@bemedev/fsf": "^0.7.0",
     "@bemedev/vitest-alias": "^0.0.2",
     "@bemedev/vitest-extended": "^0.3.3",
-    "@types/deep-diff": "^1.0.5",
     "@types/node": "^20.12.8",
     "@typescript-eslint/eslint-plugin": "^7.7.1",
     "@typescript-eslint/parser": "^7.7.1",
     "@vitest/coverage-v8": "^1.5.2",
-    "@xstate/immer": "^0.3.3",
-    "dequal": "^2.0.3",
-    "esbuild": "^0.20.2",
     "eslint": "^8.57.0",
     "glob": "^10.3.12",
     "husky": "^9.0.11",
@@ -78,14 +74,9 @@
     "tsd": "^0.31.0",
     "tslib": "^2.6.2",
     "typescript": "^5.4.4",
-    "vitest": "^1.5.2",
-    "xstate": "^4.38.3",
-    "zod": "^3.23.4"
+    "vitest": "^1.5.2"
   },
   "dependencies": {
-    "@bemedev/decompose": "^0.1.6",
-    "@bemedev/usefull-functions": "^0.1.1",
-    "firebase": "^10.11.1",
     "ts-deepmerge": "^7.0.0"
   }
 }

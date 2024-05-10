@@ -1,3 +1,3 @@
-import { Ru } from './types';
-export declare function decompose<T extends Ru>(val: T, sorter?: (a: string, b: string) => number): string[];
+import type { Decompose, Ru } from './types';
+export declare function decompose<T extends Ru>(val: T): Decompose<T>;
 //# sourceMappingURL=decompose.d.ts.map

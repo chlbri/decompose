@@ -22,10 +22,10 @@ function ddecompose(val: StateValue, prev = '') {
 
 export function decomposeSV<T extends StateValue>(
   val: T,
-  sorter?: (a: string, b: string) => number,
-): readonly StateMatching<T>[] {
+  sorter = sortMap,
+) {
   const output1 = ddecompose(val, '');
-  output1.sort(sorter ?? sortMap);
+  output1.sort(sorter);
   const regex = new RegExp(DELIMITER, 'g');
   const output2 = output1.map(value => value.replace(regex, '.'));
 

@@ -1,1 +1,1 @@
-{"version":3,"file":"decompose.d.ts","sourceRoot":"","sources":["../src/decompose.ts"],"names":[],"mappings":"AAGA,OAAO,EAAE,EAAE,EAAE,MAAM,SAAS,CAAC;AAkB7B,wBAAgB,SAAS,CAAC,CAAC,SAAS,EAAE,EACpC,GAAG,EAAE,CAAC,EACN,MAAM,CAAC,EAAE,CAAC,CAAC,EAAE,MAAM,EAAE,CAAC,EAAE,MAAM,KAAK,MAAM,YAQ1C"}
+{"version":3,"file":"decompose.d.ts","sourceRoot":"","sources":["../src/decompose.ts"],"names":[],"mappings":"AAGA,OAAO,KAAK,EAAE,SAAS,EAAE,EAAE,EAAE,MAAM,SAAS,CAAC;AAgB7C,wBAAgB,SAAS,CAAC,CAAC,SAAS,EAAE,EAAE,GAAG,EAAE,CAAC,gBAU7C"}
