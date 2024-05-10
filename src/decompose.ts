@@ -28,5 +28,5 @@ export function decompose<T extends Ru>(
   const regex = new RegExp(DELIMITER, 'g');
   const output2 = output1.map(value => value.replace(regex, '.'));
 
-  return Object.freeze(output2);
+  return output2;
 }

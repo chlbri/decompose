@@ -3,9 +3,11 @@ import { sortMap } from './sortMap';
 import type { StateMatching, StateValue } from './types';
 
 function ddecompose(val: StateValue, prev = '') {
-  const _prev = prev ? prev + DELIMITER : '';
   const output: string[] = [];
+
+  const _prev = prev ? prev + DELIMITER : '';
   prev !== '' && output.push(prev);
+
   if (typeof val === 'string') {
     output.push(`${_prev}${val}`);
   } else {
@@ -22,10 +24,10 @@ export function decomposeSV<T extends StateValue>(
   val: T,
   sorter?: (a: string, b: string) => number,
 ): readonly StateMatching<T>[] {
-  const first = ddecompose(val, '');
-  first.sort(sorter ?? sortMap);
+  const output1 = ddecompose(val, '');
+  output1.sort(sorter ?? sortMap);
   const regex = new RegExp(DELIMITER, 'g');
-  const output = first.map(value => value.replace(regex, '.'));
+  const output2 = output1.map(value => value.replace(regex, '.'));
 
-  return Object.freeze(output) as StateMatching<T>[];
+  return output2 as StateMatching<T>[];
 }

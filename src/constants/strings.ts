@@ -1,2 +1,2 @@
 export const DELIMITER = '-{/./:}-' as const;
-export const SEPARETOR = '.' as const;
+export const SEPARATOR = '.' as const;

@@ -9,14 +9,4 @@ export interface StateValueMap {
     [key: string]: StateValue;
 }
 export type Ru = Record<string, unknown>;
-type _SplitString<T extends Ru> = {
-    [key in keyof T]: key extends `${string}.${infer A}` ? A extends `${string}.${string}` ? _SplitString<Record<A, T[key]>> : Record<A, T[key]> : T[key];
-};
-type UnionToIntersection<U> = (U extends unknown ? (k: U) => void : never) extends (k: infer I) => void ? I : never;
-type SplitSeparator<S extends string> = S extends `${infer A}.${string}` ? A : S;
-type SplitKeys<T extends Ru> = {
-    [key in keyof T as SplitSeparator<key & string>]: T[key] extends Ru ? UnionToIntersection<SplitKeys<T[key]>> : T[key];
-};
-export type Recompose<T extends Ru> = SplitKeys<_SplitString<T>>;
-export {};
 //# sourceMappingURL=types.d.ts.map
