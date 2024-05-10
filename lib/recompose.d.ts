@@ -1,4 +1,4 @@
-import type { Ru } from './types';
+import type { Recompose, Ru } from './types';
 export declare function recomposeObjectUrl<T>(shape: string, value: T): Ru;
 /**
  *  Recompose a flatten object
@@ -20,5 +20,5 @@ export declare function recomposeObjectUrl<T>(shape: string, value: T): Ru;
  *  @todo
     Add type to the return
  */
-export declare function recompose<T extends Ru>(shape: T): Ru;
+export declare function recompose<T extends Ru>(shape: T): Recompose<T>;
 //# sourceMappingURL=recompose.d.ts.map

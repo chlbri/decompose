@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { merge } from 'ts-deepmerge';
 import { SEPARATOR } from './constants/strings';
-import type { Ru } from './types';
+import type { Recompose, Ru } from './types';
 
 export function recomposeObjectUrl<T>(shape: string, value: T) {
   const obj: Ru = {};
@@ -39,7 +39,7 @@ export function recomposeObjectUrl<T>(shape: string, value: T) {
  *  @todo
     Add type to the return
  */
-export function recompose<T extends Ru>(shape: T): Ru {
+export function recompose<T extends Ru>(shape: T) {
   const entries = Object.entries(shape);
   const arr: any[] = [];
   entries.forEach(([key, value]) => {
@@ -50,5 +50,5 @@ export function recompose<T extends Ru>(shape: T): Ru {
    * Add a return type
    */
   const output = merge(...arr);
-  return output;
+  return output as Recompose<T>;
 }

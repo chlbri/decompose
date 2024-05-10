@@ -26,34 +26,26 @@ export interface StateValueMap {
 
 export type Ru = Record<string, unknown>;
 
-// #region @remark The generated typescript type takes too much ressources
-// // #region Recompose
-// // #region Preparation
-// type _SplitString<T extends Ru> = {
-//   [ key in keyof T ]: key extends `${ string }.${ infer A }`
-//   ? A extends `${ string }.${ string }`
-//   ? _SplitString<Record<A, T[ key ]>>
-//   : Record<A, T[ key ]>
-//   : T[ key ];
-// };
+// #region Recompose
+// #region Preparation
+type UnionToIntersection<U> = (
+  U extends unknown ? (k: U) => void : never
+) extends (k: infer I) => void
+  ? I
+  : never;
 
-// type UnionToIntersection<U> = (
-//   U extends unknown ? ( k: U ) => void : never
-// ) extends ( k: infer I ) => void
-//   ? I
-//   : never;
+type SplitSeparator<S extends string> = S extends `${infer A}.${string}`
+  ? A
+  : S;
+// #endregion
 
-// type SplitSeparator<S extends string> = S extends `${ infer A }.${ string }`
-//   ? A
-//   : S;
-
-// type SplitKeys<T extends Ru> = {
-//   [ key in keyof T as SplitSeparator<key & string> ]: T[ key ] extends Ru
-//   ? UnionToIntersection<SplitKeys<T[ key ]>>
-//   : T[ key ];
-// };
-// // #endregion
-
-// export type Recompose<T extends Ru> = SplitKeys<_SplitString<T>>;
-// // #endregion
+export type Recompose<T extends Ru> = {
+  [key in keyof T as SplitSeparator<key & string>]: UnionToIntersection<
+    key extends `${string}.${infer A}`
+      ? A extends `${string}.${string}`
+        ? Recompose<Record<A, T[key]>>
+        : Record<A, T[key]>
+      : T[key]
+  >;
+};
 // #endregion
