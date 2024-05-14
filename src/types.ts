@@ -56,11 +56,14 @@ export type Ru = Record<string, unknown>;
 
 // #region Recompose
 // #region Preparation
-type UnionToIntersection<U> = (
-  U extends unknown ? (k: U) => void : never
-) extends (k: infer I) => void
-  ? I
-  : never;
+// type Primitive = string | number | boolean | null | undefined | never;
+type UnionToIntersection<U> = boolean extends U
+  ? U
+  : (U extends unknown ? (k: U) => void : never) extends (
+        k: infer I,
+      ) => void
+    ? I
+    : never;
 
 type SplitSeparator<S extends string> = S extends `${infer A}.${string}`
   ? A

@@ -62,7 +62,13 @@ const et3 = recompose({
   'data.login': 'login',
   id: 'id',
   'other.bool': true,
+  'other.nu': null,
+  'other.undefined': undefined,
   'other.date': new Date(),
+  bool: true,
+  nu: null,
+  undefined: undefined,
+  age: 65,
   /**
    * Don't known anything about this class
    */
@@ -70,9 +76,15 @@ const et3 = recompose({
   'other.classe.another': new Document(),
 });
 expectType<string>(et3.id);
+expectType<null>(et3.nu);
+expectType<undefined>(et3.undefined);
+expectType<null>(et3.other.nu);
+expectType<undefined>(et3.other.undefined);
 expectType<number>(et3.data.age);
+expectType<number>(et3.age);
 expectType<string>(et3.data.login);
 expectType<boolean>(et3.other.bool);
+expectType<boolean>(et3.bool);
 expectType<Date>(et3.other.date);
 expectType<AbortController>(et3.other._class);
 expectType<Document>(et3.other.classe.another);
