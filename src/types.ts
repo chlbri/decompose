@@ -10,11 +10,11 @@ export type StateMatching<
   : T;
 
 export type KeysMatching<
-  T extends Ru,
+  T extends object,
   AddObjectKeys extends boolean = true,
-  Key = keyof T,
+  Key extends keyof T = keyof T,
 > = Key extends string
-  ? T[Key] extends Ru
+  ? T[Key] extends object
     ?
         | `${Key}.${KeysMatching<T[Key], AddObjectKeys> & string}`
         | (AddObjectKeys extends true ? Key : never)

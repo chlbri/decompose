@@ -1,6 +1,6 @@
 {
   "name": "@bemedev/decompose",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "description": "Decompose object and so more",
   "author": {
     "email": "bri_lvi@icloud.com",
@@ -35,7 +35,7 @@
     "config:off": "pnpm run config --offline",
     "ci": "pnpm run config:off && pnpm run lint && pnpm run test && pnpm run build",
     "ci:online": "pnpm run config && pnpm run lint && pnpm run test && pnpm run build",
-    "ci:admin": "pnpm run rm && pnpm run ci:online",
+    "ci:admin": "pnpm run rm && pnpm run ci",
     "rollup": "rollup -c",
     "build": "rm -rf lib && pnpm run rollup",
     "rm": "rm -rf node_modules pnpm-lock.yaml",

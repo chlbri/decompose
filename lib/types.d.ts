@@ -1,5 +1,5 @@
 export type StateMatching<T extends StateValue, Key = keyof T> = T extends StateValueMap ? Key extends string ? T[Key] extends StateValueMap ? `${Key}.${StateMatching<T[Key]>}` | Key : `${Key}.${T[Key] & string}` | Key : never : T;
-export type KeysMatching<T extends Ru, AddObjectKeys extends boolean = true, Key = keyof T> = Key extends string ? T[Key] extends Ru ? `${Key}.${KeysMatching<T[Key], AddObjectKeys> & string}` | (AddObjectKeys extends true ? Key : never) : Key : never;
+export type KeysMatching<T extends object, AddObjectKeys extends boolean = true, Key extends keyof T = keyof T> = Key extends string ? T[Key] extends object ? `${Key}.${KeysMatching<T[Key], AddObjectKeys> & string}` | (AddObjectKeys extends true ? Key : never) : Key : never;
 type ToPaths<T, P extends string = ''> = T extends Ru ? {
     [K in keyof T]: ToPaths<T[K], `${P}${K & string}.`>;
 }[keyof T] : {
