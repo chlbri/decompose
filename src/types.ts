@@ -9,14 +9,17 @@ export type StateMatching<
     : never
   : T;
 
+type NotUndefined<T> = Exclude<T, undefined>;
+type NoU<T> = NotUndefined<T>;
+
 export type KeysMatching<
   T extends object,
   AddObjectKeys extends boolean = true,
   Key extends keyof T = keyof T,
 > = Key extends string
-  ? T[Key] extends object
+  ? NoU<T[Key]> extends object
     ?
-        | `${Key}.${KeysMatching<T[Key], AddObjectKeys> & string}`
+        | `${Key}.${KeysMatching<NoU<T[Key]>, AddObjectKeys> & string}`
         | (AddObjectKeys extends true ? Key : never)
     : Key
   : never;
