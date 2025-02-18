@@ -49,7 +49,10 @@ expectTypeOf(et2.data).toMatchTypeOf<{
     };
   };
 }>();
-expectTypeOf(et2.data.login.ad.cd).toMatchTypeOf<{ ef: string; xd: string }>();
+expectTypeOf(et2.data.login.ad.cd).toMatchTypeOf<{
+  ef: string;
+  xd: string;
+}>();
 
 expectTypeOf(et2.data.login.ad.cd.ef).toEqualTypeOf<string>();
 expectTypeOf(et2.data.login.ad.cd.xd).toEqualTypeOf<string>();

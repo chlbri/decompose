@@ -139,3 +139,4 @@ yarn.lock
 #my
 build.npm.ts
 build.npm.js
+tsconfig.vitest-temp.json
