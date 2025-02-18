@@ -2,7 +2,7 @@ import { t } from '@bemedev/types';
 import { DELIMITER } from './constants/strings';
 import { isPrimitive } from './helpers';
 import { sortMap } from './sortMap';
-import type { KeysMatching, Ru } from './types';
+import type { KeysMatching, Ru } from './types.types';
 
 function ddecomposeKeys(val: any, prev = '', addObjectKeys = true) {
   const _prev = prev ? prev + DELIMITER : '';
@@ -54,7 +54,12 @@ const _decomposeKeys: _DecomposeKeys_F = (
   return output1.map(value => value.replace(regex, '.'));
 };
 
-export const decomposeKeys: DecomposeKeys = (val, sorter, addObjectKeys) =>
-  _decomposeKeys(val, sorter, addObjectKeys) as any;
+export const decomposeKeys: DecomposeKeys = (
+  val,
+  sorter,
+  addObjectKeys,
+) => {
+  return t.any(_decomposeKeys(val, sorter, addObjectKeys));
+};
 decomposeKeys.low = _decomposeKeys;
 decomposeKeys.strict = t.unknown<DecomposeKeys_F>(_decomposeKeys);

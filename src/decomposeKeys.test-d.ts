@@ -1,20 +1,20 @@
-import { expectType } from 'tsd';
+import { expectTypeOf } from 'vitest';
 import { ttest0, ttest1, ttest2 } from './decompose.fixtures';
 import { decomposeKeys } from './decomposeKeys';
 
 // #region Simple
 const ttKM0 = decomposeKeys(ttest0);
-expectType<never[]>(ttKM0);
+expectTypeOf(ttKM0).toEqualTypeOf<never[]>();
 // #endregion
 
 // #region Simple
 const ttKM1 = decomposeKeys(ttest1);
-expectType<('age' | 'name')[]>(ttKM1);
+expectTypeOf(ttKM1).toEqualTypeOf<('age' | 'name')[]>();
 // #endregion
 
 // #region Simple
 const ttKM2 = decomposeKeys(ttest2);
-expectType<
+expectTypeOf(ttKM2).toEqualTypeOf<
   (
     | '_id'
     | 'data'
@@ -25,6 +25,7 @@ expectType<
     | 'statistics.updations'
     | 'statistics.deletions'
   )[]
->(ttKM2);
+>();
+// #endregion
 
 // #endregion

@@ -1,7 +1,7 @@
 import { t } from '@bemedev/types';
 import { DELIMITER } from './constants/strings';
 import { sortMap } from './sortMap';
-import type { StateMatching, StateValue } from './types';
+import type { StateMatching, StateValue } from './types.types';
 
 function ddecompose(val: StateValue, prev = '') {
   const output: string[] = [];

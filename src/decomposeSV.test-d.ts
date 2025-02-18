@@ -1,11 +1,11 @@
-import { expectType } from 'tsd';
+import { expectTypeOf } from 'vitest';
 import { ttest0 } from './decompose.fixtures';
 import { decomposeSV } from './decomposeSV';
 
 // #region Empty
 // eslint-disable-next-line @typescript-eslint/ban-types
 const ttKM0 = decomposeSV(ttest0);
-expectType<never[]>(ttKM0);
+expectTypeOf(ttKM0).toEqualTypeOf<never[]>();
 // #endregion
 
 // #region Simple
@@ -13,9 +13,9 @@ const ttKM1 = decomposeSV({
   password: 'string',
   login: 'string',
 } as const);
-expectType<('login' | 'password' | 'password.string' | 'login.string')[]>(
-  ttKM1,
-);
+expectTypeOf(ttKM1).toEqualTypeOf<
+  ('login' | 'password' | 'password.string' | 'login.string')[]
+>();
 // #endregion
 
 // #region Complex
@@ -31,7 +31,7 @@ const ttKM2 = decomposeSV({
   b: 'World',
 } as const);
 
-expectType<
+expectTypeOf(ttKM2).toEqualTypeOf<
   (
     | 'a'
     | 'a.Hello'
@@ -46,5 +46,5 @@ expectType<
     | 'c.e.g'
     | 'c.e.g.Again'
   )[]
->(ttKM2);
+>();
 // #endregion

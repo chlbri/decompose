@@ -1,6 +1,6 @@
 import { merge } from 'ts-deepmerge';
 import { SEPARATOR } from './constants/strings';
-import type { Recompose, Ru } from './types';
+import type { Recompose, Ru } from './types.types';
 
 export function recomposeObjectUrl<T>(shape: string, value: T) {
   const obj: Ru = {};

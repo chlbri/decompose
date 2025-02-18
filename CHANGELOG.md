@@ -1,52 +1,27 @@
-# @bemedev/decompose
+# Changelog
 
-Utility library for decomposing and recomposing objects in
-JavaScript/TypeScript.
+All notable changes to this project will be documented in this file.
 
-## Installation
+<br/>
 
-```bash
-npm install @bemedev/decompose
-# or
-pnpm add @bemedev/decompose
-# or
-yarn add @bemedev/decompose
-```
+## [0.8.0] - 2024-02-18 19:30
 
-## Usage
-
-```typescript
-import { decompose, recompose } from '@bemedev/decompose';
-
-const obj = {
-  data: {
-    name: {
-      firstName: 'John',
-      lastName: 'Doe',
-    },
-  },
-};
-
-const decomposed = decompose(obj);
-// Result: { 'data.name.firstName': 'John', 'data.name.lastName': 'Doe' }
-
-const recomposed = recompose(decomposed);
-// Returns original object structure
-```
-
-## Changelog
-
-<details>
-<summary>View changelog</summary>
-
-### [0.8.0] - 2024-02-18 19:30
+### Added
 
 - Initial public release
-- Added core decompose functionality
-- Added recompose function
-- Added TypeScript support
+- Core decompose functionality
+- recompose function
+- TypeScript type definitions
+- Unit test coverage
+- Documentation
 
-</details>
+### Changed
+
+- N/A
+
+### Fixed
+
+- N/A
 
 ## License
 

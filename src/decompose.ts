@@ -1,7 +1,7 @@
 import type { TrueObject } from '@bemedev/types';
 import { DELIMITER } from './constants/strings';
 import { isPrimitive } from './helpers';
-import type { Decompose } from './types';
+import type { Decompose } from './types.types';
 
 function ddecompose(val: any, prev = '') {
   const _prev = prev ? prev + DELIMITER : '';

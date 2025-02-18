@@ -1,28 +1,28 @@
-import { expectType } from 'tsd';
+import { expectTypeOf } from 'vitest';
 import { decompose } from './decompose';
 import { ttest0, ttest1, ttest2 } from './decompose.fixtures';
-import type { Decompose } from './types';
+import type { Decompose } from './types.types';
 
 // #region Empty
 const ttD0 = decompose(ttest0);
 // eslint-disable-next-line @typescript-eslint/ban-types
-expectType<{}>(ttD0);
+expectTypeOf(ttD0).toEqualTypeOf<{}>();
 // #endregion
 
 // #region Simple
 const ttD1 = decompose(ttest1);
-expectType<{ age: number; name: string }>(ttD1);
+expectTypeOf(ttD1).toEqualTypeOf<{ age: number; name: string }>();
 // #endregion
 
 // #region Complex
 const ttD2 = decompose(ttest2);
-expectType<{
+expectTypeOf(ttD2).toEqualTypeOf<{
   _id: string;
   'data.name.firstName': string;
   'data.name.lastName': string;
   'statistics.deletions': number;
   'statistics.updations': number;
-}>(ttD2);
+}>();
 // #endregion
 
 // #region Complex With Classes
@@ -43,7 +43,7 @@ declare const ttD3: Decompose<{
   };
 }>;
 
-expectType<{
+expectTypeOf(ttD3).toEqualTypeOf<{
   id: string;
   'data.age': number | undefined;
   'data.login': string;
@@ -55,7 +55,7 @@ expectType<{
   'other.permission': PermissionState;
   'other._class': AbortController | undefined;
   'other.classe.another': Document;
-}>(ttD3);
+}>();
 
 declare const ttD4: Decompose<
   {
@@ -77,7 +77,7 @@ declare const ttD4: Decompose<
   '/'
 >;
 
-expectType<{
+expectTypeOf(ttD4).toEqualTypeOf<{
   id: string;
   'data/age': number | undefined;
   'data/login': string;
@@ -86,5 +86,5 @@ expectType<{
   'other/permission': 'denied' | 'granted' | 'prompt';
   'other/_class': AbortController | undefined;
   'other/classe/another': Document;
-}>(ttD4);
+}>();
 // #endregion

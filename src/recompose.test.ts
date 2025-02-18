@@ -1,23 +1,7 @@
 import { createTests } from '@bemedev/vitest-extended';
-import { relative } from 'node:path';
-import tsd, { formatter } from 'tsd';
 import { recompose, recomposeObjectUrl } from './recompose';
 
-describe.concurrent('#1 => Recompose', () => {
-  test('#0 => Types', async () => {
-    const file = relative(process.cwd(), __filename).replace(
-      '.test.ts',
-      '.test-d.ts',
-    );
-    const testFiles = [file];
-    const _tsd = await tsd({
-      cwd: process.cwd(),
-      testFiles,
-    });
-    const _fd = formatter(_tsd, true);
-    expect(_fd).toBe('');
-  }, 15_000);
-
+describe('recompose', () => {
   describe('#1 => URL for coverage', () => {
     const { acceptation, success } = createTests(recomposeObjectUrl);
     describe('#0 Acceptation', acceptation);
@@ -32,7 +16,7 @@ describe.concurrent('#1 => Recompose', () => {
     );
   });
 
-  describe('#2 => Object', () => {
+  describe('recompose', () => {
     const { acceptation, success } = createTests(recompose);
     describe('#0 Acceptation', acceptation);
 

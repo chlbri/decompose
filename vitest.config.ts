@@ -1,9 +1,26 @@
 import { aliasTs } from '@bemedev/vitest-alias';
+import { exclude } from '@bemedev/vitest-exclude';
 import { defineConfig } from 'vitest/config';
+
 import tsconfig from './tsconfig.json';
 
 export default defineConfig({
-  plugins: [aliasTs(tsconfig as never)],
+  plugins: [
+    aliasTs(tsconfig as never),
+    exclude({
+      ignoreCoverageFiles: [
+        '**/index.ts',
+        '**/types.ts',
+        '**/*.example.ts',
+        '**/*.types.ts',
+        '**/*.typegen.ts',
+        '**/*.fixtures.ts',
+        '**/fixtures.ts',
+        '**/fixture.ts',
+        '**/*.fixture.ts',
+      ],
+    }),
+  ],
 
   test: {
     bail: 10,
@@ -21,12 +38,6 @@ export default defineConfig({
       enabled: true,
       extension: 'ts',
       all: true,
-      include: [
-        'src/decompose.ts',
-        'src/helpers.ts',
-        'src/decomposeSV.ts',
-        'src/recompose.ts',
-      ],
       provider: 'v8',
     },
   },
