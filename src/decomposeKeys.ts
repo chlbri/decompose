@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import { t } from '@bemedev/types';
 import { DELIMITER } from './constants/strings';
 import { isPrimitive } from './helpers';
 import { sortMap } from './sortMap';
@@ -23,14 +23,38 @@ function ddecomposeKeys(val: any, prev = '', addObjectKeys = true) {
   return output;
 }
 
-export function decomposeKeys<
+type DecomposeKeys_F = <
   T extends Ru,
   AddObjectKeys extends boolean = true,
->(val: T, sorter = sortMap, addObjectKeys?: AddObjectKeys) {
+>(
+  val: T,
+  sorter?: typeof sortMap,
+  addObjectKeys?: AddObjectKeys,
+) => KeysMatching<T, AddObjectKeys>[];
+
+type _DecomposeKeys_F = (
+  val: any,
+  sorter?: typeof sortMap,
+  addObjectKeys?: boolean,
+) => string[];
+
+export type DecomposeKeys = DecomposeKeys_F & {
+  strict: DecomposeKeys_F;
+  low: _DecomposeKeys_F;
+};
+
+const _decomposeKeys: _DecomposeKeys_F = (
+  val,
+  sorter = sortMap,
+  addObjectKeys = true,
+) => {
   const output1 = ddecomposeKeys(val, '', addObjectKeys);
   output1.sort(sorter);
   const regex = new RegExp(DELIMITER, 'g');
-  const output2 = output1.map(value => value.replace(regex, '.'));
+  return output1.map(value => value.replace(regex, '.'));
+};
 
-  return output2 as KeysMatching<T, true>[];
-}
+export const decomposeKeys: DecomposeKeys = (val, sorter, addObjectKeys) =>
+  _decomposeKeys(val, sorter, addObjectKeys) as any;
+decomposeKeys.low = _decomposeKeys;
+decomposeKeys.strict = t.unknown<DecomposeKeys_F>(_decomposeKeys);

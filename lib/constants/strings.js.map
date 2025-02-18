@@ -1,1 +1,1 @@
-{"version":3,"file":"strings.js","sources":["../../src/constants/strings.ts"],"sourcesContent":["export const DELIMITER = '-{/./:}-' as const;\nexport const SEPARATOR = '.' as const;\n"],"names":[],"mappings":"AAAO,MAAM,SAAS,GAAG,WAAoB;AACtC,MAAM,SAAS,GAAG;;;;"}
+{"version":3,"file":"strings.js","sources":["../../src/constants/strings.ts"],"sourcesContent":["export const DELIMITER = '-{/./:}-' as const;\nexport const SEPARATOR = '.' as const;\n"],"names":[],"mappings":"AAAO,MAAM,SAAS,GAAG;AAClB,MAAM,SAAS,GAAG;;;;"}

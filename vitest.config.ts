@@ -6,8 +6,17 @@ export default defineConfig({
   plugins: [aliasTs(tsconfig as never)],
 
   test: {
-    environment: 'node',
+    bail: 10,
+    maxConcurrency: 10,
+    passWithNoTests: true,
+    slowTestThreshold: 3000,
     globals: true,
+    logHeapUsage: true,
+    typecheck: {
+      enabled: true,
+      only: false,
+      ignoreSourceErrors: false,
+    },
     coverage: {
       enabled: true,
       extension: 'ts',

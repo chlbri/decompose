@@ -1,11 +1,10 @@
+import type { NotSubType, TrueObject } from '@bemedev/types';
 export type StateMatching<T extends StateValue, Key = keyof T> = T extends StateValueMap ? Key extends string ? T[Key] extends StateValueMap ? `${Key}.${StateMatching<T[Key]>}` | Key : `${Key}.${T[Key] & string}` | Key : never : T;
-type NotUndefined<T> = Exclude<T, undefined>;
-type NoU<T> = NotUndefined<T>;
-export type KeysMatching<T extends object, AddObjectKeys extends boolean = true, Key extends keyof T = keyof T> = Key extends string ? NoU<T[Key]> extends object ? `${Key}.${KeysMatching<NoU<T[Key]>, AddObjectKeys> & string}` | (AddObjectKeys extends true ? Key : never) : Key : never;
-type ToPaths<T, P extends string = ''> = T extends Ru ? {
-    [K in keyof T]: ToPaths<T[K], `${P}${K & string}.`>;
-}[keyof T] : {
-    path: P extends `${infer P}.` ? P : never;
+export type KeysMatching<T extends TrueObject, AddObjectKeys extends boolean = true, Key extends keyof T = keyof T> = Key extends string ? Required<T[Key]> extends TrueObject ? `${Key}.${KeysMatching<Required<T[Key]>, AddObjectKeys> & string}` | (AddObjectKeys extends true ? Key : never) : Key : never;
+type ToPaths<T, D extends string = '.', P extends string = ''> = T extends Ru ? Required<{
+    [K in keyof T]: ToPaths<T[K], D, `${P}${K & string}${D}`>;
+}>[keyof T] : {
+    path: P extends `${infer P}${D}` ? P : never;
     type: T;
 };
 type FromPaths<T extends {
@@ -19,12 +18,8 @@ type FromPaths<T extends {
 /**
  * From "Acid Coder"
  */
-export type Decompose<T extends Ru> = FromPaths<ToPaths<T>>;
+export type Decompose<T extends TrueObject, D extends string = '.'> = NotSubType<FromPaths<ToPaths<T, D>>, undefined>;
 export type LengthOf<T> = T extends ReadonlyArray<unknown> ? T['length'] : number;
-export type DecomposeOptions = {
-    delimiter?: string;
-    sorter?: (a: string, b: string) => number;
-};
 export type StateValue = string | StateValueMap;
 export interface StateValueMap {
     [key: string]: StateValue;

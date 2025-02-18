@@ -26,4 +26,5 @@ expectType<
     | 'statistics.deletions'
   )[]
 >(ttKM2);
+
 // #endregion

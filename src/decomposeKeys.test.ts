@@ -1,35 +1,40 @@
 import { createTests } from '@bemedev/vitest-extended';
 import { relative } from 'node:path';
 import tsd, { formatter } from 'tsd';
-import { describe, expect, test } from 'vitest';
 import { ttest0, ttest1, ttest2 } from './decompose.fixtures';
 import { decomposeKeys } from './decomposeKeys';
 
-test('#0 => Types', async () => {
-  const file = relative(process.cwd(), __filename).replace(
-    '.test.ts',
-    '.test-d.ts',
-  );
-  const testFiles = [file];
-  const _tsd = await tsd({
-    cwd: process.cwd(),
-    testFiles,
-  });
-  const _fd = formatter(_tsd, true);
-  expect(_fd).toBe('');
-});
-
 describe('#1 => Function', () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const useTests = createTests(decomposeKeys as any);
+  const { acceptation, success } = createTests(decomposeKeys as any);
 
-  useTests(
-    ['Empty object', [ttest0], []],
-    ['Simple object', [ttest1], ['age', 'name']],
-    [
-      'Recursive object',
-      [ttest2],
-      [
+  describe('#0 Acceptation & types', () => {
+    test('#1 => Types', async () => {
+      const file = relative(process.cwd(), __filename).replace(
+        '.test.ts',
+        '.test-d.ts',
+      );
+      const testFiles = [file];
+      const _tsd = await tsd({
+        cwd: process.cwd(),
+        testFiles,
+      });
+      const _fd = formatter(_tsd, true);
+      expect(_fd).toBe('');
+    }, 15_000);
+
+    describe('#2 Acceptation', acceptation);
+  });
+  success(
+    { invite: 'Empty object', parameters: [ttest0], expected: [] },
+    {
+      invite: 'Simple object',
+      parameters: [ttest1],
+      expected: ['age', 'name'],
+    },
+    {
+      invite: 'Recursive object',
+      parameters: [ttest2],
+      expected: [
         '_id',
         'data',
         'data.name',
@@ -39,6 +44,6 @@ describe('#1 => Function', () => {
         'statistics.deletions',
         'statistics.updations',
       ],
-    ],
+    },
   );
 });

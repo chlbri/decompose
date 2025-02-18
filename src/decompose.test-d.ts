@@ -28,16 +28,16 @@ expectType<{
 // #region Complex With Classes
 declare const ttD3: Decompose<{
   id: string;
-  data: {
-    age: number;
+  data?: {
+    age?: number;
     login: string;
   };
-  other: {
+  other?: {
     date: Date;
     bool: boolean;
     permission: PermissionState;
-    _class: AbortController;
-    classe: {
+    _class?: AbortController;
+    classe?: {
       another: Document;
     };
   };
@@ -45,7 +45,7 @@ declare const ttD3: Decompose<{
 
 expectType<{
   id: string;
-  'data.age': number;
+  'data.age': number | undefined;
   'data.login': string;
   'other.bool': boolean;
   'other.date': Date;
@@ -53,7 +53,38 @@ expectType<{
    * Don't known anything about this class
    */
   'other.permission': PermissionState;
-  'other._class': AbortController;
+  'other._class': AbortController | undefined;
   'other.classe.another': Document;
 }>(ttD3);
+
+declare const ttD4: Decompose<
+  {
+    id: string;
+    data?: {
+      age?: number;
+      login: string;
+    };
+    other?: {
+      date: Date;
+      bool: boolean;
+      permission: PermissionState;
+      _class?: AbortController;
+      classe?: {
+        another: Document;
+      };
+    };
+  },
+  '/'
+>;
+
+expectType<{
+  id: string;
+  'data/age': number | undefined;
+  'data/login': string;
+  'other/date': Date;
+  'other/bool': boolean;
+  'other/permission': 'denied' | 'granted' | 'prompt';
+  'other/_class': AbortController | undefined;
+  'other/classe/another': Document;
+}>(ttD4);
 // #endregion

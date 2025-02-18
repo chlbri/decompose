@@ -20,5 +20,12 @@ export declare function recomposeObjectUrl<T>(shape: string, value: T): Ru;
  *  @todo
     Add type to the return
  */
-export declare function recompose<T extends Ru>(shape: T): Recompose<T>;
+type Recompose_F = <T extends Ru>(shape: T) => Recompose<T>;
+type _Recompose_F = (shape: any) => any;
+export type Recomposer = Recompose_F & {
+    strict: Recompose_F;
+    low: _Recompose_F;
+};
+export declare const recompose: Recomposer;
+export {};
 //# sourceMappingURL=recompose.d.ts.map
