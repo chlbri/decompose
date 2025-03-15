@@ -10,29 +10,28 @@ describe('decomposeSV', () => {
     success(
       {
         invite: 'string',
-        parameters: ['Hello World'],
+        parameters: 'Hello World',
         expected: ['Hello World'],
       },
       {
         invite: 'Simple object',
-        parameters: [{ a: 'Hello', b: 'World' }],
+        parameters: { a: 'Hello', b: 'World' },
         expected: ['a', 'a.Hello', 'b', 'b.World'],
       },
       {
         invite: 'Complex object',
-        parameters: [
-          {
-            a: 'Hello',
-            b: 'World',
-            c: {
-              d: 'Hello',
-              e: {
-                f: 'World',
-                g: 'Again',
-              },
+        parameters: {
+          a: 'Hello',
+          b: 'World',
+          c: {
+            d: 'Hello',
+            e: {
+              f: 'World',
+              g: 'Again',
             },
           },
-        ],
+        },
+
         expected: [
           'a',
           'a.Hello',
@@ -50,19 +49,18 @@ describe('decomposeSV', () => {
       },
       {
         invite: 'Complex object with custom order',
-        parameters: [
-          {
-            a: 'Hello',
-            c: {
-              e: {
-                f: 'World',
-                g: 'Again',
-              },
-              d: 'Hello',
+        parameters: {
+          a: 'Hello',
+          c: {
+            e: {
+              f: 'World',
+              g: 'Again',
             },
-            b: 'World',
+            d: 'Hello',
           },
-        ],
+          b: 'World',
+        },
+
         expected: [
           'a',
           'a.Hello',

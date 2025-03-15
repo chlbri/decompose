@@ -8,7 +8,7 @@ function ddecompose(val: any, prev = '') {
   const output: [string, any][] = [];
   const entries1 = Object.entries(val);
   entries1.forEach(([key, value]) => {
-    const isPrimit = isPrimitive(value);
+    const isPrimit = isPrimitive(value) || Array.isArray(value);
     if (!isPrimit) {
       const values = ddecompose(value, `${_prev}${key}`);
       output.push(...values);

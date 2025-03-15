@@ -12,12 +12,12 @@ describe('decomposeKeys', () => {
       { invite: 'Empty object', parameters: [ttest0], expected: [] },
       {
         invite: 'Simple object',
-        parameters: [ttest1],
+        parameters: ttest1,
         expected: ['age', 'name'],
       },
       {
         invite: 'Recursive object',
-        parameters: [ttest2],
+        parameters: ttest2,
         expected: [
           '_id',
           'data',

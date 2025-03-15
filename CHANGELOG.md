@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 <br/>
 
+### [0.8.1] - 2024-03-15 19:30
+
+- Fix decompose array
+
+<br/>
+
 ## [0.8.0] - 2024-02-18 19:30
 
 ### Added

@@ -13,3 +13,7 @@ export const ttest2 = {
     deletions: 34,
   },
 };
+export const ttest3 = {
+  ...ttest2,
+  arr: [1, 2, 3],
+};
