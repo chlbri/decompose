@@ -1,4 +1,4 @@
-import { t } from '@bemedev/types';
+import { castings } from '@bemedev/types';
 import { DELIMITER } from './constants/strings';
 import { isPrimitive } from './helpers';
 import { sortMap } from './sortMap';
@@ -59,7 +59,8 @@ export const decomposeKeys: DecomposeKeys = (
   sorter,
   addObjectKeys,
 ) => {
-  return t.any(_decomposeKeys(val, sorter, addObjectKeys));
+  return castings.commons.any(_decomposeKeys(val, sorter, addObjectKeys));
 };
 decomposeKeys.low = _decomposeKeys;
-decomposeKeys.strict = t.unknown<DecomposeKeys_F>(_decomposeKeys);
+decomposeKeys.strict =
+  castings.commons.unknown<DecomposeKeys_F>(_decomposeKeys);

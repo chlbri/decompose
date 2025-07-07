@@ -1,4 +1,4 @@
-import type { TrueObject } from '@bemedev/types';
+import type { types } from '@bemedev/types';
 import { DELIMITER } from './constants/strings';
 import { isPrimitive } from './helpers';
 import type { Decompose } from './types.types';
@@ -17,7 +17,7 @@ function ddecompose(val: any, prev = '') {
   return output;
 }
 
-type Decompose_F = <T extends TrueObject>(val: T) => Decompose<T>;
+type Decompose_F = <T extends types.TrueObject>(val: T) => Decompose<T>;
 type _Decompose_F = (val: any) => any;
 
 export type Decomposer = Decompose_F & {

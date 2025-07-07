@@ -1,4 +1,4 @@
-import type { NotSubType, TrueObject } from '@bemedev/types';
+import type { types } from '@bemedev/types';
 
 export type StateMatching<
   T extends StateValue,
@@ -12,11 +12,11 @@ export type StateMatching<
   : T;
 
 export type KeysMatching<
-  T extends TrueObject,
+  T extends types.TrueObject,
   AddObjectKeys extends boolean = true,
   Key extends keyof T = keyof T,
 > = Key extends string
-  ? Required<T[Key]> extends TrueObject
+  ? Required<T[Key]> extends types.TrueObject
     ?
         | `${Key}.${KeysMatching<Required<T[Key]>, AddObjectKeys> & string}`
         | (AddObjectKeys extends true ? Key : never)
@@ -42,9 +42,9 @@ type FromPaths<T extends { path: string; type: unknown }> = {
  * From "Acid Coder"
  */
 export type Decompose<
-  T extends TrueObject,
+  T extends types.TrueObject,
   D extends string = '.',
-> = NotSubType<FromPaths<ToPaths<T, D>>, undefined>;
+> = types.NotSubType<FromPaths<ToPaths<T, D>>, undefined>;
 // #endregion
 
 export type LengthOf<T> =
