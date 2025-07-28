@@ -1,6 +1,7 @@
 import { createTests } from '@bemedev/vitest-extended';
 import { decompose } from './decompose';
 import { ttest0, ttest1, ttest2, ttest3 } from './decompose.fixtures';
+import { flatByKey1 } from './flat.fixtures';
 
 describe('decompose', () => {
   const { acceptation, success } = createTests(decompose.low);
@@ -11,33 +12,240 @@ describe('decompose', () => {
     success(
       { invite: 'Empty object', parameters: [ttest0], expected: ttest0 },
       {
+        invite: 'Empty object with object="object"',
+        parameters: [ttest0, { object: 'object' }],
+        expected: ttest0,
+      },
+      {
+        invite: 'Empty object with object="key"',
+        parameters: [ttest0, { object: 'key' }],
+        expected: ttest0,
+      },
+      {
+        invite: 'Empty object with object="both"',
+        parameters: [ttest0, { object: 'both' }],
+        expected: ttest0,
+      },
+      {
+        invite: 'Empty object with sep="/"',
+        parameters: [ttest0, { sep: '/' }],
+        expected: ttest0,
+      },
+      {
+        invite: 'Empty object with sep="/" and start=true',
+        parameters: [ttest0, { sep: '/', start: false }],
+        expected: ttest0,
+      },
+      {
         invite: 'Simple object',
         parameters: ttest1,
-        expected: ttest1,
+        expected: { '.age': 16, '.name': 'Alfred' },
+      },
+      {
+        invite: 'Simple object with object="object"',
+        parameters: [ttest1, { object: 'object' }],
+        expected: {},
+      },
+      {
+        invite: 'Simple object with object="key"',
+        parameters: [ttest1, { object: 'key' }],
+        expected: { '.age': 16, '.name': 'Alfred' },
+      },
+      {
+        invite: 'Simple object with object="both"',
+        parameters: [ttest1, { object: 'both' }],
+        expected: { '.age': 16, '.name': 'Alfred' },
+      },
+      {
+        invite: 'Simple object with sep="/"',
+        parameters: [ttest1, { sep: '/' }],
+        expected: { '/age': 16, '/name': 'Alfred' },
+      },
+      {
+        invite: 'Simple object with sep="/" and start=false',
+        parameters: [ttest1, { sep: '/', start: false }],
+        expected: { age: 16, name: 'Alfred' },
+      },
+      {
+        invite:
+          'Simple object with object="object" sep="/" and start=false',
+        parameters: [ttest1, { sep: '/', start: false, object: 'object' }],
+        expected: {},
       },
       {
         invite: 'Recursive object',
         parameters: ttest2,
         expected: {
+          '._id': 'nanoid',
+          '.data.name.firstName': 'Charles-Lévi',
+          '.data.name.lastName': 'BRI',
+          '.statistics.deletions': 34,
+          '.statistics.updations': 5,
+        },
+      },
+      {
+        invite: 'Recursive object with object="object"',
+        parameters: [ttest2, { object: 'object' }],
+        expected: {
+          '.data': {
+            name: {
+              firstName: 'Charles-Lévi',
+              lastName: 'BRI',
+            },
+          },
+          '.data.name': {
+            firstName: 'Charles-Lévi',
+            lastName: 'BRI',
+          },
+          '.statistics': {
+            deletions: 34,
+            updations: 5,
+          },
+        },
+      },
+      {
+        invite: 'Recursive object with object="key"',
+        parameters: [ttest2, { object: 'key' }],
+        expected: {
+          '._id': 'nanoid',
+          '.data.name.firstName': 'Charles-Lévi',
+          '.data.name.lastName': 'BRI',
+          '.statistics.deletions': 34,
+          '.statistics.updations': 5,
+        },
+      },
+      {
+        invite: 'Recursive object with sep="/"',
+        parameters: [ttest2, { sep: '/' }],
+        expected: {
+          '/_id': 'nanoid',
+          '/data/name/firstName': 'Charles-Lévi',
+          '/data/name/lastName': 'BRI',
+          '/statistics/deletions': 34,
+          '/statistics/updations': 5,
+        },
+      },
+      {
+        invite: 'Recursive object with sep="/" and object="both"',
+        parameters: [ttest2, { sep: '/', object: 'both' }],
+        expected: {
+          '/_id': 'nanoid',
+          '/data/name/firstName': 'Charles-Lévi',
+          '/data/name/lastName': 'BRI',
+          '/data': {
+            name: { firstName: 'Charles-Lévi', lastName: 'BRI' },
+          },
+          '/data/name': {
+            firstName: 'Charles-Lévi',
+            lastName: 'BRI',
+          },
+          '/statistics/updations': 5,
+          '/statistics/deletions': 34,
+          '/statistics': { updations: 5, deletions: 34 },
+        },
+      },
+      {
+        invite: 'Recursive object with sep="/" and start=false',
+        parameters: [ttest2, { sep: '/', start: false }],
+        expected: {
           _id: 'nanoid',
-          'data.name.firstName': 'Charles-Lévi',
-          'data.name.lastName': 'BRI',
-          'statistics.deletions': 34,
-          'statistics.updations': 5,
+          'data/name/firstName': 'Charles-Lévi',
+          'data/name/lastName': 'BRI',
+          'statistics/deletions': 34,
+          'statistics/updations': 5,
+        },
+      },
+      {
+        invite:
+          'Recursive object with sep="/" and start=false and object="object"',
+        parameters: [ttest2, { sep: '/', start: false, object: 'object' }],
+        expected: {
+          data: {
+            name: {
+              firstName: 'Charles-Lévi',
+              lastName: 'BRI',
+            },
+          },
+          'data/name': {
+            firstName: 'Charles-Lévi',
+            lastName: 'BRI',
+          },
+          statistics: {
+            deletions: 34,
+            updations: 5,
+          },
         },
       },
       {
         invite: 'Recursive object and array',
         parameters: ttest3,
         expected: {
+          '._id': 'nanoid',
+          '.data.name.firstName': 'Charles-Lévi',
+          '.data.name.lastName': 'BRI',
+          '.statistics.deletions': 34,
+          '.statistics.updations': 5,
+          '.arr': [1, 2, 3],
+        },
+      },
+      {
+        invite: 'Recursive object and array with sep="/"',
+        parameters: [ttest3, { sep: '/' }],
+        expected: {
+          '/_id': 'nanoid',
+          '/data/name/firstName': 'Charles-Lévi',
+          '/data/name/lastName': 'BRI',
+          '/statistics/deletions': 34,
+          '/statistics/updations': 5,
+          '/arr': [1, 2, 3],
+        },
+      },
+      {
+        invite: 'Recursive object and array with sep="/" and start=false',
+        parameters: [ttest3, { sep: '/', start: false }],
+        expected: {
           _id: 'nanoid',
-          'data.name.firstName': 'Charles-Lévi',
-          'data.name.lastName': 'BRI',
-          'statistics.deletions': 34,
-          'statistics.updations': 5,
+          'data/name/firstName': 'Charles-Lévi',
+          'data/name/lastName': 'BRI',
+          'statistics/deletions': 34,
+          'statistics/updations': 5,
           arr: [1, 2, 3],
         },
       },
+      {
+        invite:
+          'Recursive object and array with sep="/" and start=false and object="both"',
+        parameters: [ttest3, { sep: '/', start: false, object: 'both' }],
+        expected: {
+          _id: 'nanoid',
+          'data/name/firstName': 'Charles-Lévi',
+          'data/name/lastName': 'BRI',
+          'statistics/deletions': 34,
+          'statistics/updations': 5,
+          arr: [1, 2, 3],
+          data: {
+            name: {
+              firstName: 'Charles-Lévi',
+              lastName: 'BRI',
+            },
+          },
+          'data/name': {
+            firstName: 'Charles-Lévi',
+            lastName: 'BRI',
+          },
+          statistics: {
+            deletions: 34,
+            updations: 5,
+          },
+        },
+      },
     ),
+  );
+});
+
+test('#debug', () => {
+  console.warn(
+    'flatByKey1',
+    decompose(flatByKey1, { sep: '/', object: 'object' }),
   );
 });

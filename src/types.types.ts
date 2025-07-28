@@ -23,32 +23,162 @@ export type KeysMatching<
     : Key
   : never;
 
-// #region Decompose
-type ToPaths<
-  T,
-  D extends string = '.',
-  P extends string = '',
-> = T extends Ru
-  ? Required<{
-      [K in keyof T]: ToPaths<T[K], D, `${P}${K & string}${D}`>;
-    }>[keyof T]
-  : { path: P extends `${infer P}${D}` ? P : never; type: T };
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export type EmptyObject = {};
 
-type FromPaths<T extends { path: string; type: unknown }> = {
-  [P in T['path']]: Extract<T, { path: P }>['type'];
+// #region Decompose
+
+// #region type Decompose
+type WO = 'key' | 'object' | 'both';
+
+type _Decompose<
+  T,
+  sep extends string = '.',
+  wo extends WO = 'key',
+  Remaining extends string = '',
+> = {
+  [k in keyof T]: T[k] extends infer Tk
+    ? UnionToIntersection2<
+        Tk extends types.AnyArray<infer A>
+          ? A extends Ru
+            ? _Decompose<A, sep, wo, `${Remaining}${k & string}${sep}`> &
+                (wo extends 'object' | 'both'
+                  ? Record<`${Remaining}${k & string}`, Tk>
+                  : EmptyObject)
+            : wo extends 'key' | 'both'
+              ? Record<`${Remaining}${k & string}`, Tk>
+              : never
+          : Tk extends Ru
+            ? object extends Tk
+              ? Record<`${Remaining}${k & string}`, Tk>
+              : _Decompose<
+                  Tk,
+                  sep,
+                  wo,
+                  `${Remaining}${k & string}${sep}`
+                > &
+                  (wo extends 'object' | 'both'
+                    ? Record<`${Remaining}${k & string}`, Tk>
+                    : EmptyObject)
+            : wo extends 'key' | 'both'
+              ? Record<`${Remaining}${k & string}`, Tk>
+              : never
+      >
+    : never;
+}[keyof T];
+
+export type DecomposeOptions = {
+  sep?: string;
+  object?: WO;
+  start?: boolean;
 };
 
-/**
- * From "Acid Coder"
- */
+export const DEFAULT_DECOMPOSE_OPTIONS = {
+  sep: '.',
+  object: 'key',
+  start: true,
+} as const satisfies DecomposeOptions;
+
+type DefaultDecomposeOptions = typeof DEFAULT_DECOMPOSE_OPTIONS;
+
 export type Decompose<
-  T extends types.TrueObject,
-  D extends string = '.',
-> = types.NotSubType<FromPaths<ToPaths<T, D>>, undefined>;
+  T,
+  O extends DecomposeOptions = DefaultDecomposeOptions,
+  sep extends string = O['sep'] extends string
+    ? O['sep']
+    : DefaultDecomposeOptions['sep'],
+> = UnionToIntersection<
+  _Decompose<
+    T,
+    sep,
+    O['object'] extends WO
+      ? O['object']
+      : DefaultDecomposeOptions['object'],
+    O['start'] extends infer S extends boolean
+      ? S extends true
+        ? sep
+        : ''
+      : sep
+  >
+>;
 // #endregion
 
-export type LengthOf<T> =
-  T extends ReadonlyArray<unknown> ? T['length'] : number;
+// #endregion
+
+// #region type FlatByKey
+type _ExcludeFrom<
+  S extends string,
+  T extends string,
+  Delimiter extends string = '.',
+> = Exclude<
+  S extends `${string}${T}${infer V}` ? _ExcludeFrom<V, T, Delimiter> : S,
+  `${string}${string}${Delimiter}${string}` | ''
+>;
+
+export type ExtractEndsFrom<
+  S extends string,
+  T extends string,
+  Delimiter extends string = '.',
+> = Extract<
+  S,
+  `${string}${Delimiter}${T}${_ExcludeFrom<S, T, Delimiter>}`
+>;
+
+export type ExcludeFrom<
+  S extends string,
+  T extends string,
+  Delimiter extends string = '.',
+> = S extends `${infer P}${Delimiter}${T}${infer V}`
+  ? ExcludeFrom<`${P}${V}`, T, Delimiter>
+  : S;
+
+// export type ExcludeFrom<
+//   S extends string,
+//   T extends string,
+//   Delimiter extends string = '.',
+// > = _ExcludeFrom2<ExtractFrom<S, T, Delimiter>, T>;
+
+type _FlatByKey<
+  T extends object,
+  KEY extends types.PickKeysBy<T, object>,
+  wc extends boolean = false,
+  sep extends string = '.',
+> = (Decompose<T, { sep: sep; object: 'object' }> extends infer D
+  ? {
+      [K in ExtractEndsFrom<keyof D & string, KEY> as ExcludeFrom<
+        K,
+        KEY
+      >]: wc extends true ? D[K] : Omit<D[K], KEY>;
+    }
+  : never) &
+  Record<sep, T>;
+
+export type FlatOptions = {
+  sep?: string;
+  children?: boolean;
+};
+
+export const DEFAULT_FLAT_OPTIONS = {
+  sep: '.',
+  children: false,
+} as const satisfies FlatOptions;
+
+type DefaultFlatOptions = typeof DEFAULT_FLAT_OPTIONS;
+
+export type FlatByKey<
+  T extends object,
+  omit extends types.PickKeysBy<T, object>,
+  O extends FlatOptions = DefaultFlatOptions,
+> = _FlatByKey<
+  T,
+  omit,
+  O['children'] extends boolean
+    ? O['children']
+    : DefaultFlatOptions['children'],
+  O['sep'] extends string ? O['sep'] : DefaultFlatOptions['sep']
+>;
+
+//#endregion
 
 export type StateValue = string | StateValueMap;
 
@@ -61,13 +191,17 @@ export type Ru = Record<string, unknown>;
 // #region Recompose
 // #region Preparation
 // type Primitive = string | number | boolean | null | undefined | never;
-type UnionToIntersection<U> = boolean extends U
+export type UnionToIntersection<U> = boolean extends U
   ? U
-  : (U extends unknown ? (k: U) => void : never) extends (
-        k: infer I,
-      ) => void
+  : (U extends any ? (k: U) => void : never) extends (k: infer I) => void
     ? I
     : never;
+
+export type UnionKeys<U> = U extends Record<infer K, any> ? K : never;
+
+export type UnionToIntersection2<U extends object> = {
+  [K in UnionKeys<U>]: U extends Record<K, infer T> ? T : never;
+};
 
 type SplitSeparator<S extends string> = S extends `${infer A}.${string}`
   ? A

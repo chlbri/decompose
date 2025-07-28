@@ -4,7 +4,23 @@ All notable changes to this project will be documented in this file.
 
 <br/>
 
-### [0.9.0] - 2024-07-07 21:32
+### [1.0.0] - 2025-07-07 21:32
+
+- Upgrade dependencies : @bemedev/types
+- Fix types errors
+- Improve typings
+- Improve decompose function
+- Change decompose options
+- Change decompose default behavior, now each key starts with a dot
+- Add flat function
+- test(coverage): 100%
+- Ready for production
+- For recompose, all remain the same. Values are not changed, only the keys
+  are changed to start with a dot.
+
+<br/>
+
+### [0.9.0] - 2025-07-07 21:32
 
 - Upgrade dependencies : @bemedev/types
 - Fix types errors
@@ -12,13 +28,13 @@ All notable changes to this project will be documented in this file.
 
 <br/>
 
-### [0.8.1] - 2024-03-15 19:30
+### [0.8.1] - 2025-03-15 19:30
 
 - Fix decompose array
 
 <br/>
 
-## [0.8.0] - 2024-02-18 19:30
+## [0.8.0] - 2024-05-18 19:30
 
 ### Added
 
