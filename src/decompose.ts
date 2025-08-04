@@ -7,7 +7,7 @@ import {
 } from './types.types';
 
 function ddecompose(
-  val: any,
+  arg: any,
   prev = '',
   options: DecomposeOptions = DEFAULT_DECOMPOSE_OPTIONS,
 ) {
@@ -20,18 +20,32 @@ function ddecompose(
 
   const _prev = prev ? prev + DELIMITER : '';
   const output: [string, any][] = [];
-  const entries1 = Object.entries(val);
-  entries1.forEach(([key, value]) => {
-    const isPrimit = isPrimitive(value) || Array.isArray(value);
-    if (!isPrimit) {
-      const values = ddecompose(value, `${_prev}${key}`, options);
-      output.push(...values);
 
-      if (canAddObjectKeys) {
-        output.push([`${_prev}${key}`, value]);
-      }
-    } else if (canAddKeys) output.push([`${_prev}${key}`, value]);
+  const isArray = Array.isArray(arg);
+  if (isArray) {
+    if (canAddObjectKeys) output.push([`${prev}`, arg]);
+
+    arg.forEach((item, index) => {
+      const values = ddecompose(item, `${_prev}[${index}]`, options);
+      output.push(...values);
+    });
+    return output;
+  }
+
+  const isPrimit = isPrimitive(arg);
+  if (isPrimit) {
+    if (canAddKeys) output.push([`${prev}`, arg]);
+    return output;
+  }
+
+  if (canAddObjectKeys && prev !== '') output.push([`${prev}`, arg]);
+
+  const entries1 = Object.entries(arg);
+  entries1.forEach(([key, value]) => {
+    const values = ddecompose(value, `${_prev}${key}`, options);
+    output.push(...values);
   });
+
   return output;
 }
 

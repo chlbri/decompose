@@ -1,7 +1,6 @@
 import { createTests } from '@bemedev/vitest-extended';
 import { decompose } from './decompose';
 import { ttest0, ttest1, ttest2, ttest3 } from './decompose.fixtures';
-import { flatByKey1 } from './flat.fixtures';
 
 describe('decompose', () => {
   const { acceptation, success } = createTests(decompose.low);
@@ -185,7 +184,23 @@ describe('decompose', () => {
           '.data.name.lastName': 'BRI',
           '.statistics.deletions': 34,
           '.statistics.updations': 5,
-          '.arr': [1, 2, 3],
+          '.arr.[0]': 1,
+          '.arr.[1]': 2,
+          '.arr.[2]': 3,
+        },
+      },
+      {
+        invite: 'Recursive object and array with start="false"',
+        parameters: [ttest3, { start: false }],
+        expected: {
+          _id: 'nanoid',
+          'data.name.firstName': 'Charles-Lévi',
+          'data.name.lastName': 'BRI',
+          'statistics.deletions': 34,
+          'statistics.updations': 5,
+          'arr.[0]': 1,
+          'arr.[1]': 2,
+          'arr.[2]': 3,
         },
       },
       {
@@ -197,7 +212,9 @@ describe('decompose', () => {
           '/data/name/lastName': 'BRI',
           '/statistics/deletions': 34,
           '/statistics/updations': 5,
-          '/arr': [1, 2, 3],
+          '/arr/[0]': 1,
+          '/arr/[1]': 2,
+          '/arr/[2]': 3,
         },
       },
       {
@@ -209,7 +226,9 @@ describe('decompose', () => {
           'data/name/lastName': 'BRI',
           'statistics/deletions': 34,
           'statistics/updations': 5,
-          arr: [1, 2, 3],
+          'arr/[0]': 1,
+          'arr/[1]': 2,
+          'arr/[2]': 3,
         },
       },
       {
@@ -229,6 +248,9 @@ describe('decompose', () => {
               lastName: 'BRI',
             },
           },
+          'arr/[0]': 1,
+          'arr/[1]': 2,
+          'arr/[2]': 3,
           'data/name': {
             firstName: 'Charles-Lévi',
             lastName: 'BRI',
@@ -246,6 +268,6 @@ describe('decompose', () => {
 test('#debug', () => {
   console.warn(
     'flatByKey1',
-    decompose(flatByKey1, { sep: '/', object: 'object' }),
+    decompose(ttest3, { sep: '/', start: false, object: 'both' }),
   );
 });

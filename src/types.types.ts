@@ -39,15 +39,41 @@ type _Decompose<
 > = {
   [k in keyof T]: T[k] extends infer Tk
     ? UnionToIntersection2<
-        Tk extends types.AnyArray<infer A>
-          ? A extends Ru
-            ? _Decompose<A, sep, wo, `${Remaining}${k & string}${sep}`> &
-                (wo extends 'object' | 'both'
-                  ? Record<`${Remaining}${k & string}`, Tk>
-                  : EmptyObject)
-            : wo extends 'key' | 'both'
-              ? Record<`${Remaining}${k & string}`, Tk>
-              : never
+        Tk extends ReadonlyArray<any>
+          ? Extract<
+              {
+                [Key in Extract<
+                  keyof Tk,
+                  `${number}`
+                > as `${Remaining}${k & string}${sep}[${Key & string}]`]: Tk[Key] extends infer TK2
+                  ? TK2 extends Ru
+                    ? _Decompose<
+                        TK2,
+                        sep,
+                        wo,
+                        `${Remaining}${k & string}${sep}[${Key & string}]${sep}`
+                      > &
+                        (wo extends 'object' | 'both'
+                          ? Record<
+                              `${Remaining}${k & string}${sep}[${Key & string}]`,
+                              TK2
+                            >
+                          : EmptyObject)
+                    : wo extends 'key' | 'both'
+                      ? Record<
+                          `${Remaining}${k & string}${sep}[${Key & string}]`,
+                          TK2
+                        >
+                      : never
+                  : never;
+              } extends infer ARR
+                ? ARR[keyof ARR]
+                : never,
+              object
+            > &
+              (wo extends 'object' | 'both'
+                ? Record<`${Remaining}${k & string}`, Tk>
+                : EmptyObject)
           : Tk extends Ru
             ? object extends Tk
               ? Record<`${Remaining}${k & string}`, Tk>
