@@ -1,4 +1,8 @@
-import { DELIMITER } from './constants/strings';
+import {
+  DELIMITER,
+  LEFT_BRACKET,
+  RIGHT_BRACKET,
+} from './constants/strings';
 import { isPrimitive } from './helpers';
 import {
   DEFAULT_DECOMPOSE_OPTIONS,
@@ -26,7 +30,11 @@ function ddecompose(
     if (canAddObjectKeys) output.push([`${prev}`, arg]);
 
     arg.forEach((item, index) => {
-      const values = ddecompose(item, `${_prev}[${index}]`, options);
+      const values = ddecompose(
+        item,
+        `${_prev}${LEFT_BRACKET}${index}${RIGHT_BRACKET}`,
+        options,
+      );
       output.push(...values);
     });
     return output;
@@ -66,9 +74,14 @@ const _decompose: _Decompose_F = (val, options) => {
   };
   if (entries1.length == 0) return {};
 
-  const regex = new RegExp(DELIMITER, 'g');
+  const regexDel = new RegExp(DELIMITER, 'g');
+  const regexLeft = new RegExp(LEFT_BRACKET, 'g');
+  const regexRight = new RegExp(RIGHT_BRACKET, 'g');
   const entries2 = entries1.map(([__key, value]) => {
-    const _key = __key.replace(regex, sep);
+    const _key = __key
+      .replace(regexDel, sep)
+      .replace(regexLeft, `[`)
+      .replace(regexRight, `]`);
     const key = start ? `${sep}${_key}` : _key;
     return [key, value];
   });
