@@ -1,6 +1,6 @@
 import { createTests } from '@bemedev/vitest-extended';
-import { ttest0, ttest1, ttest2 } from './decompose.fixtures';
 import { decomposeKeys } from './decomposeKeys';
+import { ttest0, ttest1, ttest2 } from './fixtures';
 
 describe('decomposeKeys', () => {
   const { acceptation, success } = createTests(decomposeKeys as any);

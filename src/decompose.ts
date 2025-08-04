@@ -42,7 +42,8 @@ function ddecompose(
 
   const isPrimit = isPrimitive(arg);
   if (isPrimit) {
-    if (canAddKeys) output.push([`${prev}`, arg]);
+    const isFirst = !prev.includes(DELIMITER);
+    if (canAddKeys || isFirst) output.push([`${prev}`, arg]);
     return output;
   }
 

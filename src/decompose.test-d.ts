@@ -1,12 +1,12 @@
 import { expectTypeOf } from 'vitest';
 import { decompose } from './decompose';
-import { ttest0, ttest1, ttest2 } from './decompose.fixtures';
+import { ttest0, ttest1, ttest2 } from './fixtures';
 import type { Decompose } from './types.types';
 
 // #region Empty
 const ttD0 = decompose(ttest0);
 // eslint-disable-next-line @typescript-eslint/ban-types
-expectTypeOf(ttD0).toEqualTypeOf<unknown>();
+expectTypeOf(ttD0).toEqualTypeOf<{}>();
 // #endregion
 
 // #region Simple

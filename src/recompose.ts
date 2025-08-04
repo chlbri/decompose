@@ -38,21 +38,50 @@ export function recomposeObjectUrl<T>(shape: string, value: T) {
  *  @todo
     Add type to the return
  */
-type Recompose_F = <T extends Ru>(shape: T) => Recompose<T>;
+type Recompose_F = <const T extends Ru>(shape: T) => Recompose<T>;
 type _Recompose_F = (shape: any) => any;
+type _Recompose2_F = <T extends Ru>(shape: T) => Recompose<T>;
 
-export type Recomposer = Recompose_F & {
+export type Recomposer = _Recompose2_F & {
   strict: Recompose_F;
   low: _Recompose_F;
 };
 
 const _recompose: _Recompose_F = shape => {
   const entries = Object.entries(shape);
+  if (entries.length === 0) return {};
   const arr: any[] = [];
   entries.forEach(([key, value]) => {
     arr.push(recomposeObjectUrl(key, value));
   });
-  return merge(...arr);
+  return _recompose2(merge(...arr));
+};
+
+const _recompose2: _Recompose_F = shape => {
+  const mustReturn =
+    typeof shape !== 'object' || shape === null || Array.isArray(shape);
+  if (mustReturn) return shape;
+
+  const entries = Object.entries(shape).sort(([a], [b]) =>
+    a.localeCompare(b),
+  );
+
+  const isArray = entries.every(
+    ([key]) => key.startsWith('[') && key.endsWith(']'),
+  );
+  if (isArray) {
+    const arr: any[] = [];
+    entries.forEach(([key, value]) => {
+      const index = parseInt(key.slice(1, -1), 10);
+      arr[index] = _recompose2(value);
+    });
+    return arr;
+  }
+
+  return entries.reduce((acc, [key, value]) => {
+    acc[key] = _recompose2(value);
+    return acc;
+  }, {} as any);
 };
 
 export const recompose: Recomposer = shape => _recompose(shape);

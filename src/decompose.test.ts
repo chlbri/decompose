@@ -1,6 +1,6 @@
 import { createTests } from '@bemedev/vitest-extended';
 import { decompose } from './decompose';
-import { ttest0, ttest1, ttest2, ttest3 } from './decompose.fixtures';
+import { ttest0, ttest1, ttest2, ttest3, ttest4 } from './fixtures';
 
 describe('decompose', () => {
   const { acceptation, success } = createTests(decompose.low);
@@ -43,7 +43,7 @@ describe('decompose', () => {
       {
         invite: 'Simple object with object="object"',
         parameters: [ttest1, { object: 'object' }],
-        expected: {},
+        expected: { '.age': 16, '.name': 'Alfred' },
       },
       {
         invite: 'Simple object with object="key"',
@@ -69,7 +69,7 @@ describe('decompose', () => {
         invite:
           'Simple object with object="object" sep="/" and start=false',
         parameters: [ttest1, { sep: '/', start: false, object: 'object' }],
-        expected: {},
+        expected: { age: 16, name: 'Alfred' },
       },
       {
         invite: 'Recursive object',
@@ -86,6 +86,7 @@ describe('decompose', () => {
         invite: 'Recursive object with object="object"',
         parameters: [ttest2, { object: 'object' }],
         expected: {
+          '._id': 'nanoid',
           '.data': {
             name: {
               firstName: 'Charles-Lévi',
@@ -159,6 +160,7 @@ describe('decompose', () => {
           'Recursive object with sep="/" and start=false and object="object"',
         parameters: [ttest2, { sep: '/', start: false, object: 'object' }],
         expected: {
+          _id: 'nanoid',
           data: {
             name: {
               firstName: 'Charles-Lévi',
@@ -261,12 +263,198 @@ describe('decompose', () => {
           },
         },
       },
+      {
+        invite:
+          'Very complex with arrays of objects, sep=".", object="both" and start=false',
+        parameters: [ttest4, { sep: '.', start: false, object: 'both' }],
+        expected: {
+          _id: 'nanoid',
+          arr: [
+            {
+              id: 1,
+              value: 'one',
+            },
+            {
+              id: 2,
+              value: 'two',
+            },
+            {
+              id: 3,
+              value: 'three',
+            },
+          ],
+          'arr.[0]': {
+            id: 1,
+            value: 'one',
+          },
+          'arr.[0].id': 1,
+          'arr.[0].value': 'one',
+          'arr.[1]': {
+            id: 2,
+            value: 'two',
+          },
+          'arr.[1].id': 2,
+          'arr.[1].value': 'two',
+          'arr.[2]': {
+            id: 3,
+            value: 'three',
+          },
+          'arr.[2].id': 3,
+          'arr.[2].value': 'three',
+          arr2: [1, 2, 3],
+          'arr2.[0]': 1,
+          'arr2.[1]': 2,
+          'arr2.[2]': 3,
+          arr3: ['a', 'b', 'c'],
+          'arr3.[0]': 'a',
+          'arr3.[1]': 'b',
+          'arr3.[2]': 'c',
+          data: {
+            name: {
+              firstName: 'Charles-Lévi',
+              lastName: 'BRI',
+            },
+          },
+          'data.name': {
+            firstName: 'Charles-Lévi',
+            lastName: 'BRI',
+          },
+          'data.name.firstName': 'Charles-Lévi',
+          'data.name.lastName': 'BRI',
+          statistics: {
+            deletions: 34,
+            updations: 5,
+          },
+          'statistics.deletions': 34,
+          'statistics.updations': 5,
+        },
+      },
+      {
+        invite:
+          'Very complex with arrays of objects, sep="/", object="object" and start=true',
+        parameters: [ttest4, { sep: '/', start: true, object: 'object' }],
+        expected: {
+          '/_id': 'nanoid',
+          '/arr': [
+            {
+              id: 1,
+              value: 'one',
+            },
+            {
+              id: 2,
+              value: 'two',
+            },
+            {
+              id: 3,
+              value: 'three',
+            },
+          ],
+          '/arr/[0]': {
+            id: 1,
+            value: 'one',
+          },
+          '/arr/[1]': {
+            id: 2,
+            value: 'two',
+          },
+          '/arr/[2]': {
+            id: 3,
+            value: 'three',
+          },
+          '/arr2': [1, 2, 3],
+          '/arr3': ['a', 'b', 'c'],
+          '/data': {
+            name: {
+              firstName: 'Charles-Lévi',
+              lastName: 'BRI',
+            },
+          },
+          '/data/name': {
+            firstName: 'Charles-Lévi',
+            lastName: 'BRI',
+          },
+          '/statistics': {
+            deletions: 34,
+            updations: 5,
+          },
+        },
+      },
+      {
+        invite:
+          'Very complex with arrays of objects,  object="key" and start=false',
+        parameters: [ttest4, { start: false, object: 'key' }],
+        expected: {
+          _id: 'nanoid',
+          'arr.[0].id': 1,
+          'arr.[0].value': 'one',
+          'arr.[1].id': 2,
+          'arr.[1].value': 'two',
+          'arr.[2].id': 3,
+          'arr.[2].value': 'three',
+          'arr2.[0]': 1,
+          'arr2.[1]': 2,
+          'arr2.[2]': 3,
+          'arr3.[0]': 'a',
+          'arr3.[1]': 'b',
+          'arr3.[2]': 'c',
+          'data.name.firstName': 'Charles-Lévi',
+          'data.name.lastName': 'BRI',
+          'statistics.deletions': 34,
+          'statistics.updations': 5,
+        },
+      },
+      {
+        invite: 'Very complex with arrays of objects, and start=false',
+        parameters: [ttest4, { start: false }],
+        expected: {
+          _id: 'nanoid',
+          'arr.[0].id': 1,
+          'arr.[0].value': 'one',
+          'arr.[1].id': 2,
+          'arr.[1].value': 'two',
+          'arr.[2].id': 3,
+          'arr.[2].value': 'three',
+          'arr2.[0]': 1,
+          'arr2.[1]': 2,
+          'arr2.[2]': 3,
+          'arr3.[0]': 'a',
+          'arr3.[1]': 'b',
+          'arr3.[2]': 'c',
+          'data.name.firstName': 'Charles-Lévi',
+          'data.name.lastName': 'BRI',
+          'statistics.deletions': 34,
+          'statistics.updations': 5,
+        },
+      },
+      {
+        invite: 'Very complex with arrays of objects, without options',
+        parameters: ttest4,
+        expected: {
+          '._id': 'nanoid',
+          '.arr.[0].id': 1,
+          '.arr.[0].value': 'one',
+          '.arr.[1].id': 2,
+          '.arr.[1].value': 'two',
+          '.arr.[2].id': 3,
+          '.arr.[2].value': 'three',
+          '.arr2.[0]': 1,
+          '.arr2.[1]': 2,
+          '.arr2.[2]': 3,
+          '.arr3.[0]': 'a',
+          '.arr3.[1]': 'b',
+          '.arr3.[2]': 'c',
+          '.data.name.firstName': 'Charles-Lévi',
+          '.data.name.lastName': 'BRI',
+          '.statistics.deletions': 34,
+          '.statistics.updations': 5,
+        },
+      },
     ),
   );
 });
 
 test('#debug', () => {
-  console.warn(
+  console.log(
     'flatByKey1',
     decompose(ttest3, { sep: '/', start: false, object: 'both' }),
   );
