@@ -39,15 +39,41 @@ type _Decompose<
 > = {
   [k in keyof T]: T[k] extends infer Tk
     ? UnionToIntersection2<
-        Tk extends types.AnyArray<infer A>
-          ? A extends Ru
-            ? _Decompose<A, sep, wo, `${Remaining}${k & string}${sep}`> &
-                (wo extends 'object' | 'both'
-                  ? Record<`${Remaining}${k & string}`, Tk>
-                  : EmptyObject)
-            : wo extends 'key' | 'both'
-              ? Record<`${Remaining}${k & string}`, Tk>
-              : never
+        Tk extends ReadonlyArray<any>
+          ? Extract<
+              {
+                [Key in Extract<
+                  keyof Tk,
+                  `${number}`
+                > as `${Remaining}${k & string}${sep}[${Key & string}]`]: Tk[Key] extends infer TK2
+                  ? TK2 extends Ru
+                    ? _Decompose<
+                        TK2,
+                        sep,
+                        wo,
+                        `${Remaining}${k & string}${sep}[${Key & string}]${sep}`
+                      > &
+                        (wo extends 'object' | 'both'
+                          ? Record<
+                              `${Remaining}${k & string}${sep}[${Key & string}]`,
+                              TK2
+                            >
+                          : EmptyObject)
+                    : wo extends 'key' | 'both'
+                      ? Record<
+                          `${Remaining}${k & string}${sep}[${Key & string}]`,
+                          TK2
+                        >
+                      : never
+                  : never;
+              } extends infer ARR
+                ? ARR[keyof ARR]
+                : never,
+              object
+            > &
+              (wo extends 'object' | 'both'
+                ? Record<`${Remaining}${k & string}`, Tk>
+                : EmptyObject)
           : Tk extends Ru
             ? object extends Tk
               ? Record<`${Remaining}${k & string}`, Tk>
@@ -87,20 +113,23 @@ export type Decompose<
   sep extends string = O['sep'] extends string
     ? O['sep']
     : DefaultDecomposeOptions['sep'],
-> = UnionToIntersection<
-  _Decompose<
-    T,
-    sep,
-    O['object'] extends WO
-      ? O['object']
-      : DefaultDecomposeOptions['object'],
-    O['start'] extends infer S extends boolean
-      ? S extends true
-        ? sep
-        : ''
-      : sep
-  >
->;
+> =
+  NonNullable<unknown> extends T
+    ? NonNullable<unknown>
+    : UnionToIntersection<
+        _Decompose<
+          T,
+          sep,
+          O['object'] extends WO
+            ? O['object']
+            : DefaultDecomposeOptions['object'],
+          O['start'] extends infer S extends boolean
+            ? S extends true
+              ? sep
+              : ''
+            : sep
+        >
+      >;
 // #endregion
 
 // #endregion
@@ -206,15 +235,39 @@ export type UnionToIntersection2<U extends object> = {
 type SplitSeparator<S extends string> = S extends `${infer A}.${string}`
   ? A
   : S;
+
+// Simple tuple creation for arrays up to 10 elements
+
+export type IndexString = `[${number}]`;
+
 // #endregion
 
-export type Recompose<T extends Ru> = {
+type _Recompose<T extends Ru> = {
   [key in keyof T as SplitSeparator<key & string>]: UnionToIntersection<
     key extends `${string}.${infer A}`
       ? A extends `${string}.${string}`
-        ? Recompose<Record<A, T[key]>>
+        ? _Recompose<Record<A, T[key]>>
         : Record<A, T[key]>
       : T[key]
   >;
 };
+
+export type Recompose<T extends Ru> = Recompose3<_Recompose<T>>;
+
+export type Compare<T, U> = T extends U
+  ? U extends T
+    ? true
+    : false
+  : false;
+
+export type Recompose3<T extends types.To> = keyof T extends never
+  ? NonNullable<unknown>
+  : keyof T extends IndexString
+    ? types.ValuesOf<T>[]
+    : {
+        [K in keyof T]: T[K] extends infer TK extends types.To
+          ? Recompose3<TK>
+          : T[K];
+      };
+
 // #endregion

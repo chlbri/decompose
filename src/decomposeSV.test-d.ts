@@ -1,6 +1,6 @@
 import { expectTypeOf } from 'vitest';
-import { ttest0 } from './decompose.fixtures';
 import { decomposeSV } from './decomposeSV';
+import { ttest0 } from './fixtures';
 
 // #region Empty
 // eslint-disable-next-line @typescript-eslint/ban-types

@@ -1,14 +1,15 @@
 import { createTests } from '@bemedev/vitest-extended';
-import { ttest1, ttest2, ttest3 } from './decompose.fixtures';
+import { decompose } from './decompose';
+import { ttest0, ttest1, ttest2, ttest3, ttest4 } from './fixtures';
 import { recompose, recomposeObjectUrl } from './recompose';
 
 describe('recompose', () => {
-  describe('#1 => URL for coverage', () => {
+  describe('#01 => URL for coverage', () => {
     const { acceptation, success } = createTests(recomposeObjectUrl);
-    describe('#0 Acceptation', acceptation);
+    describe('#01.00 => Acceptation', acceptation);
 
     describe(
-      '#1 Success',
+      '#01.01 => Success',
       success({
         invite: 'Empty string',
         parameters: ['', 10],
@@ -17,12 +18,12 @@ describe('recompose', () => {
     );
   });
 
-  describe('recompose', () => {
+  describe('#02 => recompose', () => {
     const { acceptation, success } = createTests(recompose);
-    describe('#0 Acceptation', acceptation);
+    describe('#02.00 => Acceptation', acceptation);
 
     describe(
-      '#1 Success',
+      '#02.01 => Success',
       success(
         { invite: 'Empty object', parameters: [{}], expected: {} },
         {
@@ -39,6 +40,33 @@ describe('recompose', () => {
             },
             human: {
               login: 'login',
+            },
+          },
+        },
+        {
+          invite: 'Object with keys, and array, recursive order 1',
+          parameters: {
+            _id: 'nanoid',
+            'data.name.firstName': 'Charles-Lévi',
+            'data.name.lastName': 'BRI',
+            'statistics.deletions': 34,
+            'statistics.updations': 5,
+            'arr.[0]': 1,
+            'arr.[1]': 2,
+            'arr.[2]': 3,
+          },
+          expected: {
+            _id: 'nanoid',
+            arr: [1, 2, 3],
+            data: {
+              name: {
+                firstName: 'Charles-Lévi',
+                lastName: 'BRI',
+              },
+            },
+            statistics: {
+              deletions: 34,
+              updations: 5,
             },
           },
         },
@@ -194,5 +222,19 @@ describe('recompose', () => {
         },
       ),
     );
+  });
+
+  describe('#03 => decompose, recompose', () => {
+    [ttest0, ttest1, ttest2, ttest3, ttest4].forEach((testCase, index) => {
+      test(`#03.0${index} => For ttest-${index}`, () => {
+        expect(
+          recompose(
+            decompose(recompose(decompose(testCase, { start: false })), {
+              start: false,
+            }),
+          ),
+        ).toEqual(testCase);
+      });
+    });
   });
 });

@@ -1,6 +1,6 @@
 import { expectTypeOf } from 'vitest';
-import { ttest0, ttest1, ttest2 } from './decompose.fixtures';
 import { decomposeKeys } from './decomposeKeys';
+import { ttest0, ttest1, ttest2 } from './fixtures';
 
 // #region Simple
 const ttKM0 = decomposeKeys(ttest0);

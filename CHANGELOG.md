@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 <br/>
 
+### [1.1.0] - 2025-08-04 19:00
+
+- Add mapping to array
+
+<br/>
+
 ### [1.0.0] - 2025-07-07 21:32
 
 - Upgrade dependencies : @bemedev/types

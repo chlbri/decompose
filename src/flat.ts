@@ -36,7 +36,7 @@ const _flat: _Flat_F = (val, omitKey, options = DEFAULT_FLAT_OPTIONS) => {
 
   const output: any = {};
 
-  const entries = Object.entries(first);
+  const entries: [string, any][] = Object.entries(first);
   if (entries.length === 0) return output;
 
   entries

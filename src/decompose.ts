@@ -1,4 +1,8 @@
-import { DELIMITER } from './constants/strings';
+import {
+  DELIMITER,
+  LEFT_BRACKET,
+  RIGHT_BRACKET,
+} from './constants/strings';
 import { isPrimitive } from './helpers';
 import {
   DEFAULT_DECOMPOSE_OPTIONS,
@@ -7,7 +11,7 @@ import {
 } from './types.types';
 
 function ddecompose(
-  val: any,
+  arg: any,
   prev = '',
   options: DecomposeOptions = DEFAULT_DECOMPOSE_OPTIONS,
 ) {
@@ -20,18 +24,37 @@ function ddecompose(
 
   const _prev = prev ? prev + DELIMITER : '';
   const output: [string, any][] = [];
-  const entries1 = Object.entries(val);
-  entries1.forEach(([key, value]) => {
-    const isPrimit = isPrimitive(value) || Array.isArray(value);
-    if (!isPrimit) {
-      const values = ddecompose(value, `${_prev}${key}`, options);
-      output.push(...values);
 
-      if (canAddObjectKeys) {
-        output.push([`${_prev}${key}`, value]);
-      }
-    } else if (canAddKeys) output.push([`${_prev}${key}`, value]);
+  const isArray = Array.isArray(arg);
+  if (isArray) {
+    if (canAddObjectKeys) output.push([`${prev}`, arg]);
+
+    arg.forEach((item, index) => {
+      const values = ddecompose(
+        item,
+        `${_prev}${LEFT_BRACKET}${index}${RIGHT_BRACKET}`,
+        options,
+      );
+      output.push(...values);
+    });
+    return output;
+  }
+
+  const isPrimit = isPrimitive(arg);
+  if (isPrimit) {
+    const isFirst = !prev.includes(DELIMITER);
+    if (canAddKeys || isFirst) output.push([`${prev}`, arg]);
+    return output;
+  }
+
+  if (canAddObjectKeys && prev !== '') output.push([`${prev}`, arg]);
+
+  const entries1 = Object.entries(arg);
+  entries1.forEach(([key, value]) => {
+    const values = ddecompose(value, `${_prev}${key}`, options);
+    output.push(...values);
   });
+
   return output;
 }
 
@@ -52,9 +75,14 @@ const _decompose: _Decompose_F = (val, options) => {
   };
   if (entries1.length == 0) return {};
 
-  const regex = new RegExp(DELIMITER, 'g');
+  const regexDel = new RegExp(DELIMITER, 'g');
+  const regexLeft = new RegExp(LEFT_BRACKET, 'g');
+  const regexRight = new RegExp(RIGHT_BRACKET, 'g');
   const entries2 = entries1.map(([__key, value]) => {
-    const _key = __key.replace(regex, sep);
+    const _key = __key
+      .replace(regexDel, sep)
+      .replace(regexLeft, `[`)
+      .replace(regexRight, `]`);
     const key = start ? `${sep}${_key}` : _key;
     return [key, value];
   });
