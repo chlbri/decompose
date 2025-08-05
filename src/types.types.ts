@@ -113,23 +113,22 @@ export type Decompose<
   sep extends string = O['sep'] extends string
     ? O['sep']
     : DefaultDecomposeOptions['sep'],
-> =
+> = UnionToIntersection<
   NonNullable<unknown> extends T
     ? NonNullable<unknown>
-    : UnionToIntersection<
-        _Decompose<
-          T,
-          sep,
-          O['object'] extends WO
-            ? O['object']
-            : DefaultDecomposeOptions['object'],
-          O['start'] extends infer S extends boolean
-            ? S extends true
-              ? sep
-              : ''
-            : sep
-        >
-      >;
+    : _Decompose<
+        T,
+        sep,
+        O['object'] extends WO
+          ? O['object']
+          : DefaultDecomposeOptions['object'],
+        O['start'] extends infer S extends boolean
+          ? S extends true
+            ? sep
+            : ''
+          : sep
+      >
+>;
 // #endregion
 
 // #endregion
