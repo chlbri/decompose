@@ -237,4 +237,127 @@ describe('recompose', () => {
       });
     });
   });
+
+  describe('#04 => Real tests', () => {
+    test('#04.01 => ooo', () => {
+      const decomposed = {
+        states: {
+          idle: {
+            on: {},
+          },
+          state1: {
+            activities: {
+              DELAY: 'inc',
+            },
+            states: {
+              state11: {
+                states: {
+                  state111: {
+                    states: {
+                      state1111: {},
+                    },
+                  },
+                  state112: {},
+                },
+              },
+            },
+          },
+        },
+        'states.idle': {
+          on: {},
+        },
+        'states.idle.on': {},
+        'states.state1': {
+          activities: {
+            DELAY: 'inc',
+          },
+          states: {
+            state11: {
+              states: {
+                state111: {
+                  states: {
+                    state1111: {},
+                  },
+                },
+                state112: {},
+              },
+            },
+          },
+        },
+        'states.state1.activities': {
+          DELAY: 'inc',
+        },
+        'states.state1.activities.DELAY': 'inc',
+        'states.state1.states': {
+          state11: {
+            states: {
+              state111: {
+                states: {
+                  state1111: {},
+                },
+              },
+              state112: {},
+            },
+          },
+        },
+        'states.state1.states.state11': {
+          states: {
+            state111: {
+              states: {
+                state1111: {},
+              },
+            },
+            state112: {},
+          },
+        },
+        'states.state1.states.state11.states': {
+          state111: {
+            states: {
+              state1111: {},
+            },
+          },
+          state112: {},
+        },
+        'states.state1.states.state11.states.state111': {
+          states: {
+            state1111: {},
+          },
+        },
+        'states.state1.states.state11.states.state111.states': {
+          state1111: {},
+        },
+        'states.state1.states.state11.states.state111.states.state1111':
+          {},
+        'states.state1.states.state11.states.state112': {},
+      };
+
+      const actual = recompose(decomposed);
+      const expected = {
+        states: {
+          idle: {
+            on: {},
+          },
+          state1: {
+            activities: {
+              DELAY: 'inc',
+            },
+            states: {
+              state11: {
+                states: {
+                  state111: {
+                    states: {
+                      state1111: {},
+                    },
+                  },
+                  state112: {},
+                },
+              },
+            },
+          },
+        },
+      };
+
+      expect(actual).toEqual(expected);
+    });
+  });
 });

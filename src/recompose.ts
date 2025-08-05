@@ -59,12 +59,15 @@ const _recompose: _Recompose_F = shape => {
 
 const _recompose2: _Recompose_F = shape => {
   const mustReturn =
-    typeof shape !== 'object' || shape === null || Array.isArray(shape);
+    Array.isArray(shape) || typeof shape !== 'object' || shape === null;
   if (mustReturn) return shape;
 
   const entries = Object.entries(shape).sort(([a], [b]) =>
     a.localeCompare(b),
   );
+
+  const isEmpty = entries.length === 0;
+  if (isEmpty) return {};
 
   const isArray = entries.every(
     ([key]) => key.startsWith('[') && key.endsWith(']'),
