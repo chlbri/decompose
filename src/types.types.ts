@@ -39,41 +39,45 @@ type _Decompose<
 > = {
   [k in keyof T]: T[k] extends infer Tk
     ? UnionToIntersection2<
-        Tk extends ReadonlyArray<any>
-          ? Extract<
-              {
-                [Key in Extract<
-                  keyof Tk,
-                  `${number}`
-                > as `${Remaining}${k & string}${sep}[${Key & string}]`]: Tk[Key] extends infer TK2
-                  ? TK2 extends Ru
-                    ? _Decompose<
-                        TK2,
-                        sep,
-                        wo,
-                        `${Remaining}${k & string}${sep}[${Key & string}]${sep}`
-                      > &
-                        (wo extends 'object' | 'both'
-                          ? Record<
-                              `${Remaining}${k & string}${sep}[${Key & string}]`,
-                              TK2
-                            >
-                          : EmptyObject)
-                    : wo extends 'key' | 'both'
-                      ? Record<
-                          `${Remaining}${k & string}${sep}[${Key & string}]`,
-                          TK2
-                        >
-                      : never
-                  : never;
-              } extends infer ARR
-                ? ARR[keyof ARR]
-                : never,
-              object
-            > &
-              (wo extends 'object' | 'both'
-                ? Record<`${Remaining}${k & string}`, Tk>
-                : EmptyObject)
+        Tk extends types.AnyArray<any>
+          ? number extends Tk['length']
+            ? wo extends 'object' | 'both'
+              ? Record<`${Remaining}${k & string}`, Tk>
+              : EmptyObject
+            : Extract<
+                {
+                  [Key in Extract<
+                    keyof Tk,
+                    `${number}`
+                  > as `${Remaining}${k & string}${sep}[${Key & string}]`]: Tk[Key] extends infer TK2
+                    ? TK2 extends Ru
+                      ? _Decompose<
+                          TK2,
+                          sep,
+                          wo,
+                          `${Remaining}${k & string}${sep}[${Key & string}]${sep}`
+                        > &
+                          (wo extends 'object' | 'both'
+                            ? Record<
+                                `${Remaining}${k & string}${sep}[${Key & string}]`,
+                                TK2
+                              >
+                            : EmptyObject)
+                      : wo extends 'key' | 'both'
+                        ? Record<
+                            `${Remaining}${k & string}${sep}[${Key & string}]`,
+                            TK2
+                          >
+                        : never
+                    : never;
+                } extends infer ARR
+                  ? ARR[keyof ARR]
+                  : never,
+                object
+              > &
+                (wo extends 'object' | 'both'
+                  ? Record<`${Remaining}${k & string}`, Tk>
+                  : EmptyObject)
           : Tk extends Ru
             ? object extends Tk
               ? Record<`${Remaining}${k & string}`, Tk>
@@ -113,22 +117,23 @@ export type Decompose<
   sep extends string = O['sep'] extends string
     ? O['sep']
     : DefaultDecomposeOptions['sep'],
-> = UnionToIntersection<
+> =
   NonNullable<unknown> extends T
     ? NonNullable<unknown>
-    : _Decompose<
-        T,
-        sep,
-        O['object'] extends WO
-          ? O['object']
-          : DefaultDecomposeOptions['object'],
-        O['start'] extends infer S extends boolean
-          ? S extends true
-            ? sep
-            : ''
-          : sep
-      >
->;
+    : UnionToIntersection2<
+        _Decompose<
+          T,
+          sep,
+          O['object'] extends WO
+            ? O['object']
+            : DefaultDecomposeOptions['object'],
+          O['start'] extends infer S extends boolean
+            ? S extends true
+              ? sep
+              : ''
+            : sep
+        >
+      >;
 // #endregion
 
 // #endregion
