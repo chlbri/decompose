@@ -11,7 +11,7 @@ expectTypeOf(ttD0).toEqualTypeOf<{}>();
 
 // #region Simple
 const ttD1 = decompose(ttest1);
-expectTypeOf(ttD1).branded.toEqualTypeOf<{
+expectTypeOf(ttD1).toEqualTypeOf<{
   '.age': number;
   '.name': string;
 }>();
@@ -19,7 +19,7 @@ expectTypeOf(ttD1).branded.toEqualTypeOf<{
 
 // #region Complex
 const ttD2 = decompose(ttest2);
-expectTypeOf(ttD2).branded.toEqualTypeOf<{
+expectTypeOf(ttD2).toEqualTypeOf<{
   '._id': string;
   '.data.name.firstName': string;
   '.data.name.lastName': string;
@@ -49,7 +49,7 @@ declare const ttD3: Decompose<
   { object: 'both' }
 >;
 
-expectTypeOf(ttD3).branded.toEqualTypeOf<{
+expectTypeOf(ttD3).toEqualTypeOf<{
   '.id': string;
   '.data.age': number;
   '.data.login': 'string';
@@ -92,7 +92,7 @@ declare const ttD4: Decompose<
   { sep: '/' }
 >;
 
-expectTypeOf(ttD4).branded.toEqualTypeOf<{
+expectTypeOf(ttD4).toEqualTypeOf<{
   '/id': string;
   '/data/age': number;
   '/data/login': string;
@@ -120,8 +120,8 @@ declare const ttD5: Decompose<
         another: Document;
       };
     };
-    readonly arrayOfPrimitives: ['Toto', true, 42, null];
-    readonly arrayOfObjects: [
+    arrayOfPrimitives: ['Toto', true, 42, null];
+    arrayOfObjects: [
       {
         name: 'Alfred';
         value: 56;
@@ -135,8 +135,105 @@ declare const ttD5: Decompose<
         value: 12;
       },
     ];
+    stringA: string[];
   },
   { sep: '/'; object: 'both' }
 >;
 
+expectTypeOf(ttD5).toEqualTypeOf<{
+  '/id': string;
+
+  '/data': {
+    age: number;
+    login: string;
+  };
+  '/data/age': number;
+  '/data/login': string;
+
+  '/other': {
+    date: Date;
+    bool: boolean;
+    permission: PermissionState;
+    _class: AbortController;
+    classe: { another: Document };
+  };
+  '/other/date': Date;
+  '/other/bool': boolean;
+  '/other/permission': PermissionState;
+  '/other/_class': AbortController;
+
+  '/other/classe': { another: Document };
+  '/other/classe/another': Document;
+
+  '/arrayOfPrimitives': ['Toto', true, 42, null];
+  '/arrayOfPrimitives/[0]': 'Toto';
+  '/arrayOfPrimitives/[1]': true;
+  '/arrayOfPrimitives/[2]': 42;
+  '/arrayOfPrimitives/[3]': null;
+  '/arrayOfObjects': [
+    {
+      name: 'Alfred';
+      value: 56;
+    },
+    {
+      name: 'Charles';
+      value: 78;
+    },
+    {
+      name: 'Benoit';
+      value: 12;
+    },
+  ];
+
+  '/arrayOfObjects/[0]': {
+    name: 'Alfred';
+    value: 56;
+  };
+
+  '/arrayOfObjects/[1]': {
+    name: 'Charles';
+    value: 78;
+  };
+
+  '/arrayOfObjects/[2]': {
+    name: 'Benoit';
+    value: 12;
+  };
+
+  '/arrayOfObjects/[0]/name': 'Alfred';
+  '/arrayOfObjects/[0]/value': 56;
+  '/arrayOfObjects/[1]/name': 'Charles';
+  '/arrayOfObjects/[1]/value': 78;
+  '/arrayOfObjects/[2]/name': 'Benoit';
+  '/arrayOfObjects/[2]/value': 12;
+
+  '/stringA': string[];
+}>();
+
+type _TTD6 = {
+  iterator: number;
+  input: string;
+  data: string[];
+};
+
+declare const ttD6O: Decompose<_TTD6, { start: false; object: 'object' }>;
+
+expectTypeOf(ttD6O).toEqualTypeOf<{
+  data: string[];
+}>();
+
+declare const ttD6B: Decompose<_TTD6, { start: false; object: 'both' }>;
+
+expectTypeOf(ttD6B).toEqualTypeOf<{
+  iterator: number;
+  input: string;
+  data: string[];
+}>();
+
+declare const ttD6K: Decompose<_TTD6, { start: false; object: 'key' }>;
+
+expectTypeOf(ttD6K).toEqualTypeOf<{
+  iterator: number;
+  input: string;
+}>;
 // #endregion

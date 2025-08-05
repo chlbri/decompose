@@ -4,7 +4,14 @@ All notable changes to this project will be documented in this file.
 
 <br/>
 
-### [1.1.0] - 2025-08-05 07:35
+### [1.1.2] - 2025-08-05 08:00
+
+- Fix Decompose typings
+- Decompose type can perform simple array
+
+<br/>
+
+### [1.1.&] - 2025-08-05 07:35
 
 - Fix Decompose typings
 
