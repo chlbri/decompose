@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 <br/>
 
+### [1.1.4] - 2025-08-05 15:40
+
+- Fix recompose function for empty object
+
+<br/>
+
 ### [1.1.3] - 2025-08-05 08:25
 
 - Fix decompose function typings
