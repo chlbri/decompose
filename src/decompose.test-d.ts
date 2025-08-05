@@ -143,6 +143,8 @@ declare const ttD5: Decompose<
 expectTypeOf(ttD5).toEqualTypeOf<{
   '/id': string;
 
+  [key: `/stringA/[${number}]`]: string;
+
   '/data': {
     age: number;
     login: string;
@@ -228,6 +230,7 @@ expectTypeOf(ttD6B).toEqualTypeOf<{
   iterator: number;
   input: string;
   data: string[];
+  [key: `data.[${number}]`]: string;
 }>();
 
 declare const ttD6K: Decompose<_TTD6, { start: false; object: 'key' }>;
@@ -236,4 +239,33 @@ expectTypeOf(ttD6K).toEqualTypeOf<{
   iterator: number;
   input: string;
 }>;
+
+const _ttd7 = {
+  iterator: 0,
+  input: '',
+  data: [] as string[],
+};
+
+const ttD7O = decompose(_ttd7, { start: false, object: 'object' });
+
+expectTypeOf(ttD7O).toEqualTypeOf<{
+  data: string[];
+}>();
+
+const ttD7B = decompose(_ttd7, { start: false, object: 'both' });
+
+expectTypeOf(ttD7B).toEqualTypeOf<{
+  iterator: number;
+  input: string;
+  data: string[];
+  [key: `data.[${number}]`]: string;
+}>();
+
+const ttD7K = decompose(_ttd7, { start: false, object: 'key' });
+
+expectTypeOf(ttD7K).toEqualTypeOf<{
+  iterator: number;
+  input: string;
+  [key: `data.[${number}]`]: string;
+}>();
 // #endregion

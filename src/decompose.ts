@@ -58,7 +58,13 @@ function ddecompose(
   return output;
 }
 
-type Decompose_F = <T>(val: T, options?: DecomposeOptions) => Decompose<T>;
+type Decompose_F = <
+  T,
+  O extends DecomposeOptions = typeof DEFAULT_DECOMPOSE_OPTIONS,
+>(
+  val: T,
+  options?: O,
+) => Decompose<T, O>;
 type _Decompose_F = (val: any, options?: DecomposeOptions) => any;
 
 export type Decomposer = Decompose_F & {
