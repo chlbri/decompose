@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 <br/>
 
+### [1.1.3] - 2025-08-05 08:25
+
+- Fix decompose function typings
+- Upgrade dependencies : @bemedev/types
+
+<br/>
+
 ### [1.1.2] - 2025-08-05 08:00
 
 - Fix Decompose typings

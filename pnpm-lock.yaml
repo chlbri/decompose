@@ -18,8 +18,8 @@ importers:
         specifier: ^0.1.1
         version: 0.1.1(glob@11.0.3)(rollup@4.46.2)(typescript@5.9.2)
       '@bemedev/types':
-        specifier: ^0.3.1
-        version: 0.3.1
+        specifier: ^0.4.1
+        version: 0.4.1
       '@bemedev/vitest-alias':
         specifier: ^0.0.3
         version: 0.0.3(vitest@3.2.4(@types/node@24.2.0))
@@ -164,10 +164,10 @@ packages:
       }
     engines: { node: '>=22' }
 
-  '@bemedev/types@0.3.1':
+  '@bemedev/types@0.4.1':
     resolution:
       {
-        integrity: sha512-kfmHwkRzaMAqEUpzYutPxcwaXWAbZEKQ9LlNkRSv4ABvDuxSndc3gKg8PCeoEP49DviB9uU5KK11vEfUAB7Spg==,
+        integrity: sha512-eqfodtJ6hAqMImiLPEOqRDPNoGX2IHIu9rvwrEavn3xdumw6u9IlzznQpHPrdSy+V3CgNNxlkTD1+a65VG610w==,
       }
     engines: { node: '>=22' }
 
@@ -2582,7 +2582,7 @@ snapshots:
 
   '@bemedev/types@0.1.9': {}
 
-  '@bemedev/types@0.3.1': {}
+  '@bemedev/types@0.4.1': {}
 
   '@bemedev/vitest-alias@0.0.3(vitest@3.2.4(@types/node@24.2.0))':
     dependencies:

@@ -38,12 +38,17 @@ type _Decompose<
   Remaining extends string = '',
 > = {
   [k in keyof T]: T[k] extends infer Tk
-    ? UnionToIntersection2<
-        Tk extends types.AnyArray<any>
+    ? types._UnionToIntersection2<
+        Tk extends types.AnyArray<infer A>
           ? number extends Tk['length']
-            ? wo extends 'object' | 'both'
-              ? Record<`${Remaining}${k & string}`, Tk>
-              : EmptyObject
+            ? (wo extends 'object' | 'both'
+                ? Record<`${Remaining}${k & string}`, Tk>
+                : EmptyObject) &
+                (wo extends 'key' | 'both'
+                  ? {
+                      [Key in `${Remaining}${k & string}${sep}[${number}]`]: A;
+                    }
+                  : EmptyObject)
             : Extract<
                 {
                   [Key in Extract<
@@ -120,7 +125,7 @@ export type Decompose<
 > =
   NonNullable<unknown> extends T
     ? NonNullable<unknown>
-    : UnionToIntersection2<
+    : types.UnionToIntersection<
         _Decompose<
           T,
           sep,
@@ -172,7 +177,7 @@ export type ExcludeFrom<
 // > = _ExcludeFrom2<ExtractFrom<S, T, Delimiter>, T>;
 
 type _FlatByKey<
-  T extends object,
+  T,
   KEY extends types.PickKeysBy<T, object>,
   wc extends boolean = false,
   sep extends string = '.',
@@ -199,7 +204,7 @@ export const DEFAULT_FLAT_OPTIONS = {
 type DefaultFlatOptions = typeof DEFAULT_FLAT_OPTIONS;
 
 export type FlatByKey<
-  T extends object,
+  T,
   omit extends types.PickKeysBy<T, object>,
   O extends FlatOptions = DefaultFlatOptions,
 > = _FlatByKey<
@@ -223,18 +228,8 @@ export type Ru = Record<string, unknown>;
 
 // #region Recompose
 // #region Preparation
-// type Primitive = string | number | boolean | null | undefined | never;
-export type UnionToIntersection<U> = boolean extends U
-  ? U
-  : (U extends any ? (k: U) => void : never) extends (k: infer I) => void
-    ? I
-    : never;
 
 export type UnionKeys<U> = U extends Record<infer K, any> ? K : never;
-
-export type UnionToIntersection2<U extends object> = {
-  [K in UnionKeys<U>]: U extends Record<K, infer T> ? T : never;
-};
 
 type SplitSeparator<S extends string> = S extends `${infer A}.${string}`
   ? A
@@ -247,7 +242,9 @@ export type IndexString = `[${number}]`;
 // #endregion
 
 type _Recompose<T extends Ru> = {
-  [key in keyof T as SplitSeparator<key & string>]: UnionToIntersection<
+  [key in keyof T as SplitSeparator<
+    key & string
+  >]: types._UnionToIntersection1<
     key extends `${string}.${infer A}`
       ? A extends `${string}.${string}`
         ? _Recompose<Record<A, T[key]>>
