@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 <br/>
 
+### [1.2.0] - 2025-08-09 00:30
+
+- BRAKING IMPROVEMENTS
+- Upgrade dependencies
+- Fix/Improve Decompose type
+
+<br/>
+
 ### [1.1.4] - 2025-08-05 15:40
 
 - Fix recompose function for empty object
