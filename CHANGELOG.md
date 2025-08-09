@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 <br/>
 
+### [1.3.0] - 2025-08-09 15:30
+
+- BRAKING IMPROVEMENTS
+- Upgrade dependencies
+- Fix/Improve flatByKey
+- Export flatByKey
+
+<br/>
+
 ### [1.2.0] - 2025-08-09 00:30
 
 - BRAKING IMPROVEMENTS
