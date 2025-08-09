@@ -34,25 +34,7 @@ const recomposed = recompose(decomposed);
 // Returns original object structure
 ```
 
-## Changelog
-
-<details>
-<summary>View changelog</summary>
-
-### [0.8.1] - 2024-03-15 19:30
-
-- Fix decompose array
-
-<br/>
-
-### [0.8.0] - 2024-02-18 19:30
-
-- Initial public release
-- Added core decompose functionality
-- Added recompose function
-- Added TypeScript support
-
-</details>
+## [CHANGELOG](https://github.com/chlbri/decompose/blob/main/CHANGELOG.md)
 
 ## License
 
@@ -70,4 +52,4 @@ chlbri (bri_lvi@icloud.com)
 
 ## Liens
 
-- [Documentation](https://github.com/chlbri/types)
+- [Documentation](https://github.com/chlbri/decompose)

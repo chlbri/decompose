@@ -37,7 +37,7 @@ type _Decompose<
   wo extends WO = 'key',
   Remaining extends string = '',
 > = {
-  [k in keyof T]: T[k] extends infer Tk
+  [k in Exclude<keyof T, undefined>]: T[k] extends infer Tk
     ? types._UnionToIntersection2<
         Tk extends types.AnyArray<infer A>
           ? number extends Tk['length']
@@ -84,10 +84,10 @@ type _Decompose<
                   ? Record<`${Remaining}${k & string}`, Tk>
                   : EmptyObject)
           : Tk extends Ru
-            ? object extends Tk
+            ? object extends Required<Tk>
               ? Record<`${Remaining}${k & string}`, Tk>
               : _Decompose<
-                  Tk,
+                  Required<Tk>,
                   sep,
                   wo,
                   `${Remaining}${k & string}${sep}`
@@ -100,7 +100,7 @@ type _Decompose<
               : never
       >
     : never;
-}[keyof T];
+}[Exclude<keyof T, undefined>];
 
 export type DecomposeOptions = {
   sep?: string;
@@ -123,22 +123,26 @@ export type Decompose<
     ? O['sep']
     : DefaultDecomposeOptions['sep'],
 > =
-  NonNullable<unknown> extends T
+  NonNullable<unknown> extends Required<T>
     ? NonNullable<unknown>
     : types.UnionToIntersection<
-        _Decompose<
-          T,
-          sep,
-          O['object'] extends WO
-            ? O['object']
-            : DefaultDecomposeOptions['object'],
-          O['start'] extends infer S extends boolean
-            ? S extends true
-              ? sep
-              : ''
-            : sep
-        >
-      >;
+          _Decompose<
+            T,
+            sep,
+            O['object'] extends WO
+              ? O['object']
+              : DefaultDecomposeOptions['object'],
+            O['start'] extends infer S extends boolean
+              ? S extends true
+                ? sep
+                : ''
+              : sep
+          >
+        > extends infer P
+      ? {
+          [K in keyof P]: P[K];
+        }
+      : never;
 // #endregion
 
 // #endregion

@@ -103,6 +103,56 @@ expectTypeOf(ttD4).toEqualTypeOf<{
   '/other/classe/another': Document;
 }>();
 
+type _TTD4P = Partial<{
+  id: string;
+  data: {
+    age: number;
+    login: string;
+  };
+  other: Partial<{
+    date: Date;
+    bool: boolean;
+    permission: PermissionState;
+    _class: AbortController;
+    classe: {
+      another: Document;
+    };
+  }>;
+}>;
+
+declare const ttD4p: Decompose<_TTD4P, { sep: '/'; object: 'both' }>;
+
+expectTypeOf(ttD4p).toEqualTypeOf<{
+  '/id': string | undefined;
+  '/data/age': number;
+  '/data/login': string;
+  '/other/date': Date;
+  '/other/bool': boolean;
+  '/other/permission': 'denied' | 'granted' | 'prompt';
+  '/other/_class': AbortController;
+  '/other/classe/another': Document;
+  '/data':
+    | {
+        age: number;
+        login: string;
+      }
+    | undefined;
+  '/other':
+    | Partial<{
+        date: Date;
+        bool: boolean;
+        permission: PermissionState;
+        _class: AbortController;
+        classe: {
+          another: Document;
+        };
+      }>
+    | undefined;
+  '/other/classe': {
+    another: Document;
+  };
+}>();
+
 //Create a tests with readonly  array of primitive and array of objects
 declare const ttD5: Decompose<
   {
