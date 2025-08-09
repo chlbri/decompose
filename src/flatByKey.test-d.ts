@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import type { flatByKey1 } from './flat.fixtures';
+import type { flatByKey1 } from './fixtures';
 import type { FlatByKey } from './types.types';
 
 // #region FlatMapByKey/Decempose
