@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 <br/>
 
+### [1.3.1] - 2025-08-13 14:20
+
+- Fix type FlatByKey
+- Coverage **_100%_**
+
+<br/>
+
 ### [1.3.0] - 2025-08-09 15:30
 
 - BRAKING IMPROVEMENTS

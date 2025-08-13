@@ -187,9 +187,10 @@ type _FlatByKey<
   sep extends string = '.',
 > = (Decompose<T, { sep: sep; object: 'object' }> extends infer D
   ? {
-      [K in ExtractEndsFrom<keyof D & string, KEY> as ExcludeFrom<
+      [K in ExtractEndsFrom<keyof D & string, KEY, sep> as ExcludeFrom<
         K,
-        KEY
+        KEY,
+        sep
       >]: wc extends true ? D[K] : Omit<D[K], KEY>;
     }
   : never) &
