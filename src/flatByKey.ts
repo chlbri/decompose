@@ -1,9 +1,6 @@
 import type { types } from '@bemedev/types';
-import {
-  DEFAULT_FLAT_OPTIONS,
-  type FlatByKey,
-  type FlatOptions,
-} from './types.types';
+import { DEFAULT_FLAT_OPTIONS } from './helpers';
+import type { FlatByKey, FlatOptions } from './types.types';
 
 type Flat_F = <
   T extends types.Ru,

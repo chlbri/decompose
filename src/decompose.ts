@@ -3,12 +3,8 @@ import {
   LEFT_BRACKET,
   RIGHT_BRACKET,
 } from './constants/strings';
-import { isPrimitive } from './helpers';
-import {
-  DEFAULT_DECOMPOSE_OPTIONS,
-  type Decompose,
-  type DecomposeOptions,
-} from './types.types';
+import { DEFAULT_DECOMPOSE_OPTIONS, isPrimitive } from './helpers';
+import type { Decompose, DecomposeOptions } from './types.types';
 
 function ddecompose(
   arg: any,

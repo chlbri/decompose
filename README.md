@@ -16,7 +16,12 @@ yarn add @bemedev/decompose
 ## Usage
 
 ```typescript
-import { decompose, recompose } from '@bemedev/decompose';
+import {
+  decompose,
+  decomposeKeys,
+  decomposeSV,
+  recompose,
+} from '@bemedev/decompose';
 
 const obj = {
   data: {
@@ -32,6 +37,18 @@ const decomposed = decompose(obj);
 
 const recomposed = recompose(decomposed);
 // Returns original object structure
+
+const keys = decomposeKeys(obj);
+// Result: ['data', 'data.name', 'data.name.firstName', 'data.name.lastName']
+
+const sv = {
+  red: {
+    walk: 'stop',
+  },
+};
+
+const decomposedSV = decomposeSV(sv);
+// Result: ['red', 'red.walk', 'red.walk.stop']
 ```
 
 ## [CHANGELOG](https://github.com/chlbri/decompose/blob/main/CHANGELOG.md)

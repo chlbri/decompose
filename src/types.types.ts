@@ -1,4 +1,8 @@
 import type { types } from '@bemedev/types';
+import type {
+  DEFAULT_DECOMPOSE_OPTIONS,
+  DEFAULT_FLAT_OPTIONS,
+} from './helpers';
 
 export type StateMatching<
   T extends StateValue,
@@ -26,11 +30,30 @@ export type KeysMatching<
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export type EmptyObject = {};
 
+//build type that separate a type by two: optional (not undefined) keys and required keys
+export type SeparateOptionalAndRequiredKeys<T> = {
+  requireds: {
+    [K in keyof T as EmptyObject extends Pick<T, K> ? never : K]: T[K];
+  };
+  optionals: {
+    [K in keyof T as EmptyObject extends Pick<T, K> ? K : never]: T[K];
+  };
+};
+export type SeparateUndefinedAndRequiredKeys<T> = {
+  requireds: {
+    [K in keyof T as undefined extends T[K] ? never : K]: T[K];
+  };
+  undefineds: {
+    [K in keyof T as undefined extends T[K] ? K : never]: T[K];
+  };
+};
+
 // #region Decompose
 
 // #region type Decompose
 type WO = 'key' | 'object' | 'both';
 
+// #region type _Decompose
 type _Decompose<
   T,
   sep extends string = '.',
@@ -87,7 +110,7 @@ type _Decompose<
             ? object extends Required<Tk>
               ? Record<`${Remaining}${k & string}`, Tk>
               : _Decompose<
-                  Required<Tk>,
+                  Tk,
                   sep,
                   wo,
                   `${Remaining}${k & string}${sep}`
@@ -101,18 +124,13 @@ type _Decompose<
       >
     : never;
 }[Exclude<keyof T, undefined>];
+// #endregion
 
 export type DecomposeOptions = {
   sep?: string;
   object?: WO;
   start?: boolean;
 };
-
-export const DEFAULT_DECOMPOSE_OPTIONS = {
-  sep: '.',
-  object: 'key',
-  start: true,
-} as const satisfies DecomposeOptions;
 
 type DefaultDecomposeOptions = typeof DEFAULT_DECOMPOSE_OPTIONS;
 
@@ -123,8 +141,8 @@ export type Decompose<
     ? O['sep']
     : DefaultDecomposeOptions['sep'],
 > =
-  NonNullable<unknown> extends Required<T>
-    ? NonNullable<unknown>
+  EmptyObject extends Required<T>
+    ? EmptyObject
     : types.UnionToIntersection<
           _Decompose<
             T,
@@ -201,13 +219,7 @@ export type FlatOptions = {
   children?: boolean;
 };
 
-export const DEFAULT_FLAT_OPTIONS = {
-  sep: '.',
-  children: false,
-} as const satisfies FlatOptions;
-
 type DefaultFlatOptions = typeof DEFAULT_FLAT_OPTIONS;
-
 export type FlatByKey<
   T,
   omit extends types.PickKeysBy<T, object>,
