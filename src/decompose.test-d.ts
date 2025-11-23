@@ -103,7 +103,7 @@ expectTypeOf(ttD4).toEqualTypeOf<{
   '/other/classe/another': Document;
 }>();
 
-type _TTD4P = Partial<{
+type _TTD4P = {
   id: string;
   data: {
     age: number;
@@ -118,39 +118,39 @@ type _TTD4P = Partial<{
       another: Document;
     };
   }>;
-}>;
+  cbool?: boolean;
+};
 
 declare const ttD4p: Decompose<_TTD4P, { sep: '/'; object: 'both' }>;
 
 expectTypeOf(ttD4p).toEqualTypeOf<{
-  '/id': string | undefined;
+  '/id': string;
   '/data/age': number;
   '/data/login': string;
-  '/other/date': Date;
-  '/other/bool': boolean;
-  '/other/permission': 'denied' | 'granted' | 'prompt';
-  '/other/_class': AbortController;
+  '/other/date': Date | undefined;
+  '/other/bool': boolean | undefined;
+  '/other/permission': 'denied' | 'granted' | 'prompt' | undefined;
+  '/other/_class': AbortController | undefined;
   '/other/classe/another': Document;
-  '/data':
+  '/data': {
+    age: number;
+    login: string;
+  };
+  '/other/classe':
     | {
-        age: number;
-        login: string;
+        another: Document;
       }
     | undefined;
-  '/other':
-    | Partial<{
-        date: Date;
-        bool: boolean;
-        permission: PermissionState;
-        _class: AbortController;
-        classe: {
-          another: Document;
-        };
-      }>
-    | undefined;
-  '/other/classe': {
-    another: Document;
-  };
+  '/other': Partial<{
+    date: Date;
+    bool: boolean;
+    permission: PermissionState;
+    _class: AbortController;
+    classe: {
+      another: Document;
+    };
+  }>;
+  '/cbool': boolean | undefined;
 }>();
 
 //Create a tests with readonly  array of primitive and array of objects
@@ -167,7 +167,7 @@ declare const ttD5: Decompose<
       permission: PermissionState;
       _class: AbortController;
       classe: {
-        another: Document;
+        another?: Document;
       };
     };
     arrayOfPrimitives: ['Toto', true, 42, null];
@@ -185,7 +185,7 @@ declare const ttD5: Decompose<
         value: 12;
       },
     ];
-    stringA: string[];
+    stringA?: string[];
   },
   { sep: '/'; object: 'both' }
 >;
@@ -193,7 +193,7 @@ declare const ttD5: Decompose<
 expectTypeOf(ttD5).toEqualTypeOf<{
   '/id': string;
 
-  [key: `/stringA/[${number}]`]: string;
+  [key: `/stringA/[${number}]`]: string | undefined;
 
   '/data': {
     age: number;
@@ -207,21 +207,23 @@ expectTypeOf(ttD5).toEqualTypeOf<{
     bool: boolean;
     permission: PermissionState;
     _class: AbortController;
-    classe: { another: Document };
+    classe: { another?: Document };
   };
+
   '/other/date': Date;
   '/other/bool': boolean;
   '/other/permission': PermissionState;
   '/other/_class': AbortController;
 
-  '/other/classe': { another: Document };
-  '/other/classe/another': Document;
+  '/other/classe': { another?: Document };
+  '/other/classe/another': Document | undefined;
 
   '/arrayOfPrimitives': ['Toto', true, 42, null];
   '/arrayOfPrimitives/[0]': 'Toto';
   '/arrayOfPrimitives/[1]': true;
   '/arrayOfPrimitives/[2]': 42;
   '/arrayOfPrimitives/[3]': null;
+
   '/arrayOfObjects': [
     {
       name: 'Alfred';
@@ -259,7 +261,7 @@ expectTypeOf(ttD5).toEqualTypeOf<{
   '/arrayOfObjects/[2]/name': 'Benoit';
   '/arrayOfObjects/[2]/value': 12;
 
-  '/stringA': string[];
+  '/stringA': string[] | undefined;
 }>();
 
 type _TTD6 = {

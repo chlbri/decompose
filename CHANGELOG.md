@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 <br/>
 
+### [1.4.0] - 2025-11-23 14:20
+
+- Add decomposeKeys
+- Add decomposeSV
+- Add sortMap
+- Upgrade dependencies
+
+<br/>
+
 ### [1.3.1] - 2025-08-13 14:20
 
 - Fix type FlatByKey
