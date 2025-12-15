@@ -39,6 +39,7 @@ export type SeparateOptionalAndRequiredKeys<T> = {
     [K in keyof T as EmptyObject extends Pick<T, K> ? K : never]: T[K];
   };
 };
+
 export type SeparateUndefinedAndRequiredKeys<T> = {
   requireds: {
     [K in keyof T as undefined extends T[K] ? never : K]: T[K];
@@ -67,18 +68,30 @@ type _Decompose<
             ? (wo extends 'object' | 'both'
                 ? Record<`${Remaining}${k & string}`, Tk>
                 : EmptyObject) &
-                (wo extends 'key' | 'both'
-                  ? {
-                      [Key in `${Remaining}${k & string}${sep}[${number}]`]: A;
-                    }
-                  : EmptyObject)
+                (A extends Ru
+                  ? _Decompose<
+                      A,
+                      sep,
+                      wo,
+                      `${Remaining}${k & string}${sep}[${number}]${sep}`
+                    > &
+                      (wo extends 'object' | 'both'
+                        ? {
+                            [Key in `${Remaining}${k & string}${sep}[${number}]`]: A;
+                          }
+                        : EmptyObject)
+                  : wo extends 'key' | 'both'
+                    ? {
+                        [Key in `${Remaining}${k & string}${sep}[${number}]`]: A;
+                      }
+                    : EmptyObject)
             : Extract<
                 {
                   [Key in Extract<
                     keyof Tk,
                     `${number}`
                   > as `${Remaining}${k & string}${sep}[${Key & string}]`]: Tk[Key] extends infer TK2
-                    ? TK2 extends Ru
+                    ? TK2 extends Ru | types.AnyArray
                       ? _Decompose<
                           TK2,
                           sep,
@@ -107,7 +120,7 @@ type _Decompose<
                   ? Record<`${Remaining}${k & string}`, Tk>
                   : EmptyObject)
           : Tk extends Ru
-            ? object extends Required<Tk>
+            ? EmptyObject extends Required<Tk>
               ? Record<`${Remaining}${k & string}`, Tk>
               : _Decompose<
                   Tk,
@@ -157,9 +170,7 @@ export type Decompose<
               : sep
           >
         > extends infer P
-      ? {
-          [K in keyof P]: P[K];
-        }
+      ? P
       : never;
 // #endregion
 

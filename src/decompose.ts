@@ -56,7 +56,7 @@ function ddecompose(
 
 type Decompose_F = <
   T,
-  O extends DecomposeOptions = typeof DEFAULT_DECOMPOSE_OPTIONS,
+  const O extends DecomposeOptions = typeof DEFAULT_DECOMPOSE_OPTIONS,
 >(
   val: T,
   options?: O,
