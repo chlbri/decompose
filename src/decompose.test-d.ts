@@ -186,14 +186,17 @@ declare const ttD5: Decompose<
       },
     ];
     stringA?: string[];
+    stringB: { toto: string }[];
   },
-  { sep: '/'; object: 'both' }
+  { sep: '/'; object: 'both'; start: true }
 >;
 
 expectTypeOf(ttD5).toEqualTypeOf<{
   '/id': string;
 
   [key: `/stringA/[${number}]`]: string | undefined;
+  [key: `/stringB/[${number}]`]: { toto: string };
+  [key: `/stringB/[${number}]/toto`]: string;
 
   '/data': {
     age: number;
@@ -207,7 +210,7 @@ expectTypeOf(ttD5).toEqualTypeOf<{
     bool: boolean;
     permission: PermissionState;
     _class: AbortController;
-    classe: { another?: Document };
+    classe: { another?: Document | undefined };
   };
 
   '/other/date': Date;
@@ -215,7 +218,7 @@ expectTypeOf(ttD5).toEqualTypeOf<{
   '/other/permission': PermissionState;
   '/other/_class': AbortController;
 
-  '/other/classe': { another?: Document };
+  '/other/classe': { another?: Document | undefined };
   '/other/classe/another': Document | undefined;
 
   '/arrayOfPrimitives': ['Toto', true, 42, null];
@@ -262,6 +265,7 @@ expectTypeOf(ttD5).toEqualTypeOf<{
   '/arrayOfObjects/[2]/value': 12;
 
   '/stringA': string[] | undefined;
+  '/stringB': { toto: string }[];
 }>();
 
 type _TTD6 = {
@@ -321,3 +325,11 @@ expectTypeOf(ttD7K).toEqualTypeOf<{
   [key: `data.[${number}]`]: string;
 }>();
 // #endregion
+
+type TArray1 = Decompose<[1, 2, 3], { object: 'both' }>;
+
+expectTypeOf<TArray1>().toEqualTypeOf<{
+  '.[0]': 1;
+  '.[1]': 2;
+  '.[2]': 3;
+}>();

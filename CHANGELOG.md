@@ -4,6 +4,27 @@ All notable changes to this project will be documented in this file.
 
 <br/>
 
+<details>
+<summary>
+
+## **[1.5.0] - 15/12/2025** => _14:30_
+
+</summary>
+
+- Refactor: improve type definitions and helper functions
+- Enhance Decompose Type: add Partial support and refine key exclusion
+- Enhance Type Definitions for FlatByKey
+- Add comprehensive tests for decomposeKeys, decomposeSV, flatByKey, and
+  recompose functions
+- Rename flat.ts to flatByKey.ts for better clarity
+- Add new helper functions for type manipulation
+- Update dependencies
+- <u>Test coverage **_100%_**</u>
+
+</details>
+
+<br/>
+
 ### [1.4.0] - 2025-11-23 14:20
 
 - Add decomposeKeys

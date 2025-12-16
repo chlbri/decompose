@@ -39,6 +39,7 @@ export type SeparateOptionalAndRequiredKeys<T> = {
     [K in keyof T as EmptyObject extends Pick<T, K> ? K : never]: T[K];
   };
 };
+
 export type SeparateUndefinedAndRequiredKeys<T> = {
   requireds: {
     [K in keyof T as undefined extends T[K] ? never : K]: T[K];
@@ -54,6 +55,68 @@ export type SeparateUndefinedAndRequiredKeys<T> = {
 type WO = 'key' | 'object' | 'both';
 
 // #region type _Decompose
+
+// Helper type for decomposing a single tuple element
+type _DecomposeTupleElement<
+  TK2,
+  sep extends string,
+  wo extends WO,
+  KeyPrefix extends string,
+> =
+  TK2 extends types.AnyArray<infer A>
+    ? number extends TK2['length']
+      ? // Dynamic array inside tuple element - use UnionToIntersection to preserve template literal keys
+        (wo extends 'object' | 'both'
+          ? Record<KeyPrefix, TK2>
+          : EmptyObject) &
+          (A extends Ru
+            ? types.UnionToIntersection<
+                _Decompose<
+                  A,
+                  sep,
+                  wo,
+                  `${KeyPrefix}${sep}[${number}]${sep}`
+                >
+              > &
+                (wo extends 'object' | 'both'
+                  ? { [Key in `${KeyPrefix}${sep}[${number}]`]: A }
+                  : EmptyObject)
+            : wo extends 'key' | 'both'
+              ? { [Key in `${KeyPrefix}${sep}[${number}]`]: A }
+              : EmptyObject)
+      : // Nested tuple inside tuple element
+        _DecomposeTupleRec<TK2, sep, wo, KeyPrefix> &
+          (wo extends 'object' | 'both'
+            ? Record<KeyPrefix, TK2>
+            : EmptyObject)
+    : TK2 extends Ru
+      ? types.UnionToIntersection<
+          _Decompose<TK2, sep, wo, `${KeyPrefix}${sep}`>
+        > &
+          (wo extends 'object' | 'both'
+            ? Record<KeyPrefix, TK2>
+            : EmptyObject)
+      : wo extends 'key' | 'both'
+        ? Record<KeyPrefix, TK2>
+        : EmptyObject;
+
+// Recursive helper to decompose tuple producing intersection directly
+type _DecomposeTupleRec<
+  Tk extends readonly unknown[],
+  sep extends string,
+  wo extends WO,
+  Prefix extends string,
+  I extends readonly unknown[] = [],
+> = I['length'] extends Tk['length']
+  ? EmptyObject
+  : _DecomposeTupleElement<
+      Tk[I['length']],
+      sep,
+      wo,
+      `${Prefix}${sep}[${I['length']}]`
+    > &
+      _DecomposeTupleRec<Tk, sep, wo, Prefix, [...I, unknown]>;
+
 type _Decompose<
   T,
   sep extends string = '.',
@@ -67,47 +130,37 @@ type _Decompose<
             ? (wo extends 'object' | 'both'
                 ? Record<`${Remaining}${k & string}`, Tk>
                 : EmptyObject) &
-                (wo extends 'key' | 'both'
-                  ? {
-                      [Key in `${Remaining}${k & string}${sep}[${number}]`]: A;
-                    }
-                  : EmptyObject)
-            : Extract<
-                {
-                  [Key in Extract<
-                    keyof Tk,
-                    `${number}`
-                  > as `${Remaining}${k & string}${sep}[${Key & string}]`]: Tk[Key] extends infer TK2
-                    ? TK2 extends Ru
-                      ? _Decompose<
-                          TK2,
-                          sep,
-                          wo,
-                          `${Remaining}${k & string}${sep}[${Key & string}]${sep}`
-                        > &
-                          (wo extends 'object' | 'both'
-                            ? Record<
-                                `${Remaining}${k & string}${sep}[${Key & string}]`,
-                                TK2
-                              >
-                            : EmptyObject)
-                      : wo extends 'key' | 'both'
-                        ? Record<
-                            `${Remaining}${k & string}${sep}[${Key & string}]`,
-                            TK2
-                          >
-                        : never
-                    : never;
-                } extends infer ARR
-                  ? ARR[keyof ARR]
-                  : never,
-                object
+                (A extends Ru
+                  ? types.UnionToIntersection<
+                      _Decompose<
+                        A,
+                        sep,
+                        wo,
+                        `${Remaining}${k & string}${sep}[${number}]${sep}`
+                      >
+                    > &
+                      (wo extends 'object' | 'both'
+                        ? {
+                            [Key in `${Remaining}${k & string}${sep}[${number}]`]: A;
+                          }
+                        : EmptyObject)
+                  : wo extends 'key' | 'both'
+                    ? {
+                        [Key in `${Remaining}${k & string}${sep}[${number}]`]: A;
+                      }
+                    : EmptyObject)
+            : // Tuple - use recursive helper that produces intersection directly
+              _DecomposeTupleRec<
+                Tk,
+                sep,
+                wo,
+                `${Remaining}${k & string}`
               > &
                 (wo extends 'object' | 'both'
                   ? Record<`${Remaining}${k & string}`, Tk>
                   : EmptyObject)
           : Tk extends Ru
-            ? object extends Required<Tk>
+            ? EmptyObject extends Required<Tk>
               ? Record<`${Remaining}${k & string}`, Tk>
               : _Decompose<
                   Tk,
@@ -143,9 +196,10 @@ export type Decompose<
 > =
   EmptyObject extends Required<T>
     ? EmptyObject
-    : types.UnionToIntersection<
+    : T extends types.AnyArray
+      ? types.UnionToIntersection<
           _Decompose<
-            T,
+            { ' ': T },
             sep,
             O['object'] extends WO
               ? O['object']
@@ -156,11 +210,31 @@ export type Decompose<
                 : ''
               : sep
           >
-        > extends infer P
-      ? {
-          [K in keyof P]: P[K];
-        }
-      : never;
+        > extends infer P1
+        ? {
+            [K in keyof P1 as K extends `${sep} ${infer P}`
+              ? P extends ''
+                ? never
+                : P
+              : never]: P1[K];
+          }
+        : never
+      : types.UnionToIntersection<
+            _Decompose<
+              T,
+              sep,
+              O['object'] extends WO
+                ? O['object']
+                : DefaultDecomposeOptions['object'],
+              O['start'] extends infer S extends boolean
+                ? S extends true
+                  ? sep
+                  : ''
+                : sep
+            >
+          > extends infer P
+        ? P
+        : never;
 // #endregion
 
 // #endregion
