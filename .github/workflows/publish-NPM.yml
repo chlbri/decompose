@@ -3,11 +3,7 @@ on:
   push:
     branches:
       - master
-      - main
-
-permissions:
-  id-token: write  # Required for OIDC
-  contents: read      
+      - main    
 
 jobs:
   publish:
