@@ -325,3 +325,11 @@ expectTypeOf(ttD7K).toEqualTypeOf<{
   [key: `data.[${number}]`]: string;
 }>();
 // #endregion
+
+type TArray1 = Decompose<[1, 2, 3], { object: 'both' }>;
+
+expectTypeOf<TArray1>().toEqualTypeOf<{
+  '.[0]': 1;
+  '.[1]': 2;
+  '.[2]': 3;
+}>();

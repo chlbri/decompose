@@ -1,5 +1,4 @@
 import { decompose } from './decompose';
-import type { Decompose } from './types.types';
 
 //Create a tests with readonly  array of primitive and array of objects
 declare const _ttD: {
@@ -34,11 +33,6 @@ declare const _ttD: {
         info: string;
         stats?: number[];
       }[];
-      data2: [
-        {
-          more: string;
-        },
-      ];
     },
   ];
   stringA?: string[];
@@ -50,19 +44,26 @@ const ttD = decompose.strict(_ttD, {
   object: 'both',
 });
 
-type TTT = (typeof _ttD)[`arrayOfObjects`][2]['data'][number];
-
 expectTypeOf(ttD).toEqualTypeOf<{
-  '/id': string;
-
   [key: `/stringA/[${number}]`]: string | undefined;
   [key: `/stringB/[${number}]`]: { toto: string };
   [key: `/stringB/[${number}]/toto`]: string;
+  [key: `/arrayOfObjects/[2]/data/[${number}]/info`]: string;
 
   [key: `/arrayOfObjects/[2]/data/[${number}]`]: {
     info: string;
     stats?: number[];
   };
+
+  [key: `/arrayOfObjects/[2]/data/[${number}]/stats`]:
+    | number[]
+    | undefined;
+
+  [key: `/arrayOfObjects/[2]/data/[${number}]/stats/[${number}]`]:
+    | number
+    | undefined;
+
+  '/id': string;
 
   '/data': {
     age: number;
@@ -108,6 +109,7 @@ expectTypeOf(ttD).toEqualTypeOf<{
     {
       name: 'Benoit';
       value: 12;
+
       data: {
         info: string;
         stats?: number[];
@@ -149,4 +151,4 @@ expectTypeOf(ttD).toEqualTypeOf<{
 
   '/stringA': string[] | undefined;
   '/stringB': { toto: string }[];
-}>();
+}>;

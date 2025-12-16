@@ -10,6 +10,7 @@ function ddecompose(
   arg: any,
   prev = '',
   options: DecomposeOptions = DEFAULT_DECOMPOSE_OPTIONS,
+  first = true,
 ) {
   const { object } = {
     ...DEFAULT_DECOMPOSE_OPTIONS,
@@ -23,13 +24,14 @@ function ddecompose(
 
   const isArray = Array.isArray(arg);
   if (isArray) {
-    if (canAddObjectKeys) output.push([`${prev}`, arg]);
+    if (canAddObjectKeys && !first) output.push([`${prev}`, arg]);
 
     arg.forEach((item, index) => {
       const values = ddecompose(
         item,
         `${_prev}${LEFT_BRACKET}${index}${RIGHT_BRACKET}`,
         options,
+        false,
       );
       output.push(...values);
     });
@@ -47,7 +49,7 @@ function ddecompose(
 
   const entries1 = Object.entries(arg);
   entries1.forEach(([key, value]) => {
-    const values = ddecompose(value, `${_prev}${key}`, options);
+    const values = ddecompose(value, `${_prev}${key}`, options, false);
     output.push(...values);
   });
 
@@ -75,7 +77,10 @@ const _decompose: _Decompose_F = (val, options) => {
     ...DEFAULT_DECOMPOSE_OPTIONS,
     ...options,
   };
-  if (entries1.length == 0) return {};
+  if (entries1.length == 0) {
+    if (Array.isArray(val)) return [];
+    return {};
+  }
 
   const regexDel = new RegExp(DELIMITER, 'g');
   const regexLeft = new RegExp(LEFT_BRACKET, 'g');
