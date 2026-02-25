@@ -1,5 +1,3 @@
-import type { DecomposeOptions, FlatOptions } from './types.types';
-
 type Primitive = string | number | boolean | null | undefined;
 
 export function isPrimitive(arg: unknown): arg is Primitive {
@@ -12,13 +10,18 @@ export function isPrimitive(arg: unknown): arg is Primitive {
   );
 }
 
-export const DEFAULT_FLAT_OPTIONS = {
-  sep: '.',
-  children: false,
-} as const satisfies FlatOptions;
+export const isArrayIndex = (segment: string): boolean => {
+  return /^\[\d+\]$/.test(segment);
+};
 
-export const DEFAULT_DECOMPOSE_OPTIONS = {
-  sep: '.',
-  object: 'key',
-  start: true,
-} as const satisfies DecomposeOptions;
+export const parseIndex = (segment: string): number => {
+  return parseInt(segment.slice(1, -1), 10);
+};
+
+export const splitKey = (key: string): string[] => {
+  return key.split('.').filter(s => s !== '');
+};
+
+export const nextDefault = (segment: string): any => {
+  return isArrayIndex(segment) ? [] : {};
+};

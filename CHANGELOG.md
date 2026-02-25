@@ -7,6 +7,29 @@ All notable changes to this project will be documented in this file.
 <details>
 <summary>
 
+## **[2.0.0] - 25/02/2026** => _10:00_
+
+</summary>
+
+- Break: refactor decompose function to better handle nested arrays and
+  tuples
+- Feature: add support for optional properties in `Decompose` type
+- Feature: enhance tuple decomposition logic with improved type safety
+- Add comprehensive array test cases (`decompose.array.test.ts`)
+- Add complex type tests (`decompose.complex.test-d.ts`)
+- Update CI/CD: upgrade npm-publish action to version 4
+- Update CI/CD: add OIDC permissions to publish-NPM workflow
+- Update CI/CD: restrict publish-NPM workflow to main branch only
+- Update dependencies
+- <u>Test coverage **_100%_**</u>
+
+</details>
+
+<br/>
+
+<details>
+<summary>
+
 ## **[1.5.0] - 15/12/2025** => _14:30_
 
 </summary>

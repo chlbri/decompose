@@ -1,9 +1,10 @@
+import { DEFAULT_DECOMPOSE_OPTIONS } from './constants';
 import {
   DELIMITER,
   LEFT_BRACKET,
   RIGHT_BRACKET,
 } from './constants/strings';
-import { DEFAULT_DECOMPOSE_OPTIONS, isPrimitive } from './helpers';
+import { isPrimitive } from './helpers';
 import type { Decompose, DecomposeOptions } from './types.types';
 
 function ddecompose(

@@ -51,6 +51,65 @@ const decomposedSV = decomposeSV(sv);
 // Result: ['red', 'red.walk', 'red.walk.stop']
 ```
 
+### Arrays and tuples (v2.0.0+)
+
+```typescript
+const objWithArray = {
+  users: [{ name: 'Alice' }, { name: 'Bob' }],
+};
+
+const decomposed = decompose(objWithArray);
+// Result: { 'users.0.name': 'Alice', 'users.1.name': 'Bob' }
+```
+
+Nested tuples and optional properties are fully supported in the
+`Decompose` type.
+
+### `getByKey`
+
+Retrieves a value from an object using a dot-notation key.
+
+```typescript
+import { getByKey } from '@bemedev/decompose';
+
+const obj = {
+  data: {
+    name: {
+      firstName: 'John',
+      lastName: 'Doe',
+    },
+  },
+};
+
+getByKey(obj, 'data.name.firstName'); // 'John'
+getByKey(obj, 'data.name.lastName'); // 'Doe'
+
+// Works with array indices too
+const arr = { users: [{ name: 'Alice' }, { name: 'Bob' }] };
+
+getByKey(arr, 'users.[0].name'); // 'Alice'
+getByKey(arr, 'users.[1].name'); // 'Bob'
+```
+
+### `assignByKey`
+
+Assigns a value to a path in an object using a dot-notation key. Creates
+intermediate objects or arrays as needed.
+
+```typescript
+import { assignByKey } from '@bemedev/decompose';
+
+const obj = { data: { name: { firstName: 'John' } } };
+
+const updated = assignByKey(obj, 'data.name.firstName', 'Jane');
+// Result: { data: { name: { firstName: 'Jane' } } }
+
+// Works with array indices too
+const arr = { users: [{ name: 'Alice' }] };
+const updated2 = assignByKey(arr, 'users.[0].name', 'Bob');
+// Result: { users: [{ name: 'Bob' }] }
+```
+
 ## [CHANGELOG](https://github.com/chlbri/decompose/blob/main/CHANGELOG.md)
 
 ## License

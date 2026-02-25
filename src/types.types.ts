@@ -2,7 +2,7 @@ import type { types } from '@bemedev/types';
 import type {
   DEFAULT_DECOMPOSE_OPTIONS,
   DEFAULT_FLAT_OPTIONS,
-} from './helpers';
+} from './constants';
 
 export type StateMatching<
   T extends StateValue,

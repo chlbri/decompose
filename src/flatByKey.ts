@@ -1,5 +1,5 @@
 import type { types } from '@bemedev/types';
-import { DEFAULT_FLAT_OPTIONS } from './helpers';
+import { DEFAULT_FLAT_OPTIONS } from './constants';
 import type { FlatByKey, FlatOptions } from './types.types';
 
 type Flat_F = <
