@@ -7,6 +7,25 @@ All notable changes to this project will be documented in this file.
 <details>
 <summary>
 
+## **[2.0.1] - 25/02/2026** => _23:53_
+
+</summary>
+
+- Fix: correct `DEFAULT_OPTIONS` import from type-only to value import in
+  `getByKey`
+- Fix: use `DEFAULT_OPTIONS` as base when merging options in
+  `getByKey.options`
+- Fix: `decompose.low` and `decompose.strict` now reference the public
+  `decompose` function instead of the private `_decompose`
+- <u>Test coverage **_100%_**</u>
+
+</details>
+
+<br/>
+
+<details>
+<summary>
+
 ## **[2.0.0] - 25/02/2026** => _10:00_
 
 </summary>

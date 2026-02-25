@@ -102,5 +102,5 @@ const _decompose: _Decompose_F = (val, options) => {
 /* v8 ignore next 1 */
 export const decompose: Decomposer = (val, options) =>
   _decompose(val, options);
-decompose.low = _decompose;
-decompose.strict = _decompose;
+decompose.low = decompose;
+decompose.strict = decompose;

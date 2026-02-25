@@ -1,4 +1,4 @@
-import type { DEFAULT_OPTIONS } from './constants';
+import { DEFAULT_OPTIONS } from './constants';
 import { decompose } from '../decompose';
 import type { Decompose, DecomposeOptions, Ru } from '../types.types';
 
@@ -29,7 +29,7 @@ export interface GetByKey {
 }
 
 const _getByKey: GetByKey['low'] = (obj, key) => {
-  const decomposed = decompose.low(obj, { start: false, object: 'both' });
+  const decomposed = decompose.low(obj, DEFAULT_OPTIONS);
   return (decomposed as any)[key];
 };
 
@@ -46,6 +46,9 @@ export const getByKey: GetByKey = (obj, key) => _getByKey(obj, key);
 getByKey.low = getByKey;
 getByKey.typed = getByKey;
 getByKey.options = options => (obj, key) => {
-  const decomposed = decompose.low(obj, options);
+  const decomposed = decompose.low(obj, {
+    ...DEFAULT_OPTIONS,
+    ...options,
+  });
   return decomposed[key];
 };
