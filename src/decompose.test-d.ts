@@ -109,15 +109,15 @@ type _TTD4P = {
     age: number;
     login: string;
   };
-  other: Partial<{
-    date: Date;
-    bool: boolean;
-    permission: PermissionState;
-    _class: AbortController;
-    classe: {
+  other: {
+    date?: Date;
+    bool?: boolean;
+    permission?: PermissionState;
+    _class?: AbortController;
+    classe?: {
       another: Document;
     };
-  }>;
+  };
   cbool?: boolean;
 };
 
@@ -125,31 +125,31 @@ declare const ttD4p: Decompose<_TTD4P, { sep: '/'; object: 'both' }>;
 
 expectTypeOf(ttD4p).toEqualTypeOf<{
   '/id': string;
-  '/data/age': number;
-  '/data/login': string;
-  '/other/date': Date | undefined;
-  '/other/bool': boolean | undefined;
-  '/other/permission': 'denied' | 'granted' | 'prompt' | undefined;
-  '/other/_class': AbortController | undefined;
-  '/other/classe/another': Document;
   '/data': {
     age: number;
     login: string;
   };
+  '/data/age': number;
+  '/data/login': string;
+  '/other': {
+    date?: Date;
+    bool?: boolean;
+    permission?: PermissionState;
+    _class?: AbortController;
+    classe?: {
+      another: Document;
+    };
+  };
+  '/other/date': Date | undefined;
+  '/other/bool': boolean | undefined;
+  '/other/permission': 'denied' | 'granted' | 'prompt' | undefined;
+  '/other/_class': AbortController | undefined;
   '/other/classe':
     | {
         another: Document;
       }
     | undefined;
-  '/other': Partial<{
-    date: Date;
-    bool: boolean;
-    permission: PermissionState;
-    _class: AbortController;
-    classe: {
-      another: Document;
-    };
-  }>;
+  '/other/classe/another': Document | undefined;
   '/cbool': boolean | undefined;
 }>();
 
@@ -294,6 +294,7 @@ declare const ttD6K: Decompose<_TTD6, { start: false; object: 'key' }>;
 expectTypeOf(ttD6K).toEqualTypeOf<{
   iterator: number;
   input: string;
+  [x: `data.[${number}]`]: string;
 }>;
 
 const _ttd7 = {

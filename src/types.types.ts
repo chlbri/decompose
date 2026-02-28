@@ -2,7 +2,29 @@ import type { types } from '@bemedev/types';
 import type {
   DEFAULT_DECOMPOSE_OPTIONS,
   DEFAULT_FLAT_OPTIONS,
+  SEPARATOR,
 } from './constants';
+
+// #region type GetParents
+type RemoveLast<
+  A extends string,
+  sep extends string,
+> = A extends `${infer Rest}${sep}${infer Last}`
+  ? Last extends `${string}${sep}${string}`
+    ? `${Rest}${sep}${RemoveLast<Last, sep>}`
+    : Rest
+  : never;
+
+type _GetParents<A extends string, sep extends string> = A extends sep
+  ? never
+  : A extends `${string}${sep}${string}`
+    ? RemoveLast<A, sep> | GetParents<RemoveLast<A, sep>, sep>
+    : never;
+export type GetParents<
+  A extends string,
+  sep extends string = typeof SEPARATOR,
+> = Exclude<_GetParents<A, sep>, ''>;
+// #endregion
 
 export type StateMatching<
   T extends StateValue,
@@ -71,7 +93,7 @@ type _DecomposeTupleElement<
           : EmptyObject) &
           (A extends Ru
             ? types.UnionToIntersection<
-                _Decompose<
+                __Decompose<
                   A,
                   sep,
                   wo,
@@ -91,7 +113,7 @@ type _DecomposeTupleElement<
             : EmptyObject)
     : TK2 extends Ru
       ? types.UnionToIntersection<
-          _Decompose<TK2, sep, wo, `${KeyPrefix}${sep}`>
+          __Decompose<TK2, sep, wo, `${KeyPrefix}${sep}`>
         > &
           (wo extends 'object' | 'both'
             ? Record<KeyPrefix, TK2>
@@ -117,7 +139,7 @@ type _DecomposeTupleRec<
     > &
       _DecomposeTupleRec<Tk, sep, wo, Prefix, [...I, unknown]>;
 
-type _Decompose<
+type __Decompose<
   T,
   sep extends string = '.',
   wo extends WO = 'key',
@@ -132,7 +154,7 @@ type _Decompose<
                 : EmptyObject) &
                 (A extends Ru
                   ? types.UnionToIntersection<
-                      _Decompose<
+                      __Decompose<
                         A,
                         sep,
                         wo,
@@ -162,7 +184,7 @@ type _Decompose<
           : Tk extends Ru
             ? EmptyObject extends Required<Tk>
               ? Record<`${Remaining}${k & string}`, Tk>
-              : _Decompose<
+              : __Decompose<
                   Tk,
                   sep,
                   wo,
@@ -187,7 +209,7 @@ export type DecomposeOptions = {
 
 type DefaultDecomposeOptions = typeof DEFAULT_DECOMPOSE_OPTIONS;
 
-export type Decompose<
+type _Decompose<
   T,
   O extends DecomposeOptions = DefaultDecomposeOptions,
   sep extends string = O['sep'] extends string
@@ -198,7 +220,7 @@ export type Decompose<
     ? EmptyObject
     : T extends types.AnyArray
       ? types.UnionToIntersection<
-          _Decompose<
+          __Decompose<
             { ' ': T },
             sep,
             O['object'] extends WO
@@ -220,7 +242,7 @@ export type Decompose<
           }
         : never
       : types.UnionToIntersection<
-            _Decompose<
+            __Decompose<
               T,
               sep,
               O['object'] extends WO
@@ -235,6 +257,38 @@ export type Decompose<
           > extends infer P
         ? P
         : never;
+
+export type ReduceParentsKeys<T, sep extends string = '.'> = {
+  [K in keyof T]-?: undefined extends T[K]
+    ? true
+    : GetParents<K & string, sep> extends infer K2 extends keyof T
+      ? undefined extends T[K2]
+        ? true
+        : false
+      : false;
+};
+
+export type Decompose<
+  T,
+  O extends DecomposeOptions = DefaultDecomposeOptions,
+  sep extends string = O['sep'] extends string
+    ? O['sep']
+    : DefaultDecomposeOptions['sep'],
+> =
+  _Decompose<T, O> extends infer D extends _Decompose<T, O>
+    ? ReduceParentsKeys<D, sep> extends infer RPK extends
+        ReduceParentsKeys<D, sep>
+      ? {
+          [K in keyof D]:
+            | D[K]
+            | (RPK[K] extends true
+                ? undefined
+                : RPK[K] extends never
+                  ? undefined
+                  : never);
+        }
+      : never
+    : never;
 // #endregion
 
 // #endregion
@@ -277,7 +331,7 @@ type _FlatByKey<
   KEY extends types.PickKeysBy<T, object>,
   wc extends boolean = false,
   sep extends string = '.',
-> = (Decompose<T, { sep: sep; object: 'object' }> extends infer D
+> = (_Decompose<T, { sep: sep; object: 'object' }> extends infer D
   ? {
       [K in ExtractEndsFrom<keyof D & string, KEY, sep> as ExcludeFrom<
         K,

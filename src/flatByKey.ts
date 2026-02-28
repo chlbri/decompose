@@ -18,7 +18,7 @@ type _Flat_F = (
   path?: string,
 ) => any;
 
-export type Flat = Flat_F & {
+export type Flat = _Flat_F & {
   strict: Flat_F;
   low: _Flat_F;
 };

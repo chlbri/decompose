@@ -1,6 +1,7 @@
 import { DEFAULT_OPTIONS } from './constants';
 import { decompose } from '../decompose';
 import type { Decompose, DecomposeOptions, Ru } from '../types.types';
+import type { NotUndefined } from '@bemedev/types/lib/types/commons.types';
 
 // #region type GetByKey_F
 export type GetByKey_F = <
@@ -10,6 +11,13 @@ export type GetByKey_F = <
   obj: T,
   key: Extract<K, string>,
 ) => Decompose<T, typeof DEFAULT_OPTIONS>[K];
+export type GetByKeyDefined_F = <
+  const T extends Ru,
+  const K extends keyof Decompose<T, typeof DEFAULT_OPTIONS>,
+>(
+  obj: T,
+  key: Extract<K, string>,
+) => NotUndefined<Decompose<T, typeof DEFAULT_OPTIONS>[K]>;
 
 export type GetByKeyOption_F = <
   const O extends DecomposeOptions = typeof DEFAULT_OPTIONS,
@@ -25,6 +33,7 @@ export interface GetByKey {
   (obj: any, key: string): any;
   low: (obj: any, key: string) => any;
   typed: GetByKey_F;
+  defined: GetByKeyDefined_F;
   options: GetByKeyOption_F;
 }
 
@@ -45,6 +54,8 @@ export const getByKey: GetByKey = (obj, key) => _getByKey(obj, key);
 
 getByKey.low = getByKey;
 getByKey.typed = getByKey;
+getByKey.defined = getByKey;
+
 getByKey.options = options => (obj, key) => {
   const decomposed = decompose.low(obj, {
     ...DEFAULT_OPTIONS,
