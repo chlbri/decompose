@@ -91,6 +91,22 @@ getByKey(arr, 'users.[0].name'); // 'Alice'
 getByKey(arr, 'users.[1].name'); // 'Bob'
 ```
 
+#### Typed variants
+
+`getByKey.typed` preserves the full TypeScript type including `undefined`:
+
+```typescript
+const val = getByKey.typed(obj, 'data.name.firstName');
+// type: string | undefined
+```
+
+`getByKey.defined` strips `undefined` from the return type (non-nullable):
+
+```typescript
+const val = getByKey.defined(obj, 'data.name.firstName');
+// type: string
+```
+
 ### `assignByKey`
 
 Assigns a value to a path in an object using a dot-notation key. Creates

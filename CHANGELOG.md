@@ -7,6 +7,32 @@ All notable changes to this project will be documented in this file.
 <details>
 <summary>
 
+## **[2.0.2] - 28/02/2026** => _19:05_
+
+</summary>
+
+- Add: type `GetParents` dans `types.types.ts` — extrait les chemins
+  parents d'un chemin séparé par un séparateur
+- Add: type `ReduceParentsKeys` dans `types.types.ts` — propage `undefined`
+  depuis les clés parentes optionnelles
+- Refactor: type `Decompose` — renommage interne `_Decompose` →
+  `__Decompose`, nouveau wrapper `_Decompose` + application de
+  `ReduceParentsKeys` pour rendre les clés enfants correctement
+  optionnelles quand le parent est optionnel
+- Add: type `GetByKeyDefined_F` et méthode `getByKey.defined` dans
+  `contexts/get.ts` — retourne la valeur sans `undefined` (non-nullable)
+- Fix: type `Flat` dans `flatByKey.ts` — corrigé de `Flat_F` à `_Flat_F`
+- Add: nouveaux fichiers de tests type-level `contexts/get.test-d.ts` et
+  `types.types.test-d.ts`
+- <u>Test coverage **_100%_**</u>
+
+</details>
+
+<br/>
+
+<details>
+<summary>
+
 ## **[2.0.1] - 25/02/2026** => _23:53_
 
 </summary>
