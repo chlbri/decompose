@@ -85,8 +85,18 @@ describe('assignByKey', () => {
         expected: [5, 'hello'],
       },
       {
+        invite: 'Assign to non-existing array index + 1',
+        parameters: [[5], '[2]', 'hello'],
+        expected: [5, 'hello'],
+      },
+      {
         invite: 'Assign a property on an empty-slot array element',
         parameters: [[], '[0].a', 1],
+        expected: [{ a: 1 }],
+      },
+      {
+        invite: 'Assign a property on an empty-slot array element (+2)',
+        parameters: [[], '[2].a', 1],
         expected: [{ a: 1 }],
       },
     ),

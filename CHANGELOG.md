@@ -7,6 +7,24 @@ All notable changes to this project will be documented in this file.
 <details>
 <summary>
 
+## **[2.0.3] - 02/03/2026** => _00:46_
+
+</summary>
+
+- Fix: `assignByKey` in `contexts/assign.ts` — clamp array index to
+  `out.length` when it exceeds the array length, preventing sparse arrays
+- Add: new test cases in `contexts/assign.test.ts` — assign to
+  out-of-bounds (+number) index (`[2]`) and assign a property on the
+  empty-slot element at index `[2]`
+- <u>Test coverage **_100%_**</u>
+
+</details>
+
+<br/>
+
+<details>
+<summary>
+
 ## **[2.0.2] - 28/02/2026** => _19:05_
 
 </summary>

@@ -34,7 +34,9 @@ const _assignByKey: AssignByKey['low'] = (obj, key, value) => {
 
   if (rest.length === 0) {
     if (isArrayIndex(first)) {
-      out[parseIndex(first)] = value;
+      let idx = parseIndex(first);
+      if (idx > out.length) idx = out.length;
+      out[idx] = value;
     } else {
       out[first] = value;
     }
@@ -46,7 +48,8 @@ const _assignByKey: AssignByKey['low'] = (obj, key, value) => {
   const _nextDefault = nextDefault(next);
 
   if (isArrayIndex(first)) {
-    const idx = parseIndex(first);
+    let idx = parseIndex(first);
+    if (idx > out.length) idx = out.length;
     out[idx] = _assignByKey(out[idx] ?? _nextDefault, nextKey, value);
   } else {
     out[first] = _assignByKey(out[first] ?? _nextDefault, nextKey, value);
