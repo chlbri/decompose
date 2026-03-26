@@ -7,6 +7,38 @@ All notable changes to this project will be documented in this file.
 <details>
 <summary>
 
+## **[2.1.0] - 26/03/2026** => _14:19_
+
+</summary>
+
+- Refactor: migrate bundler from `rollup` to `rolldown` (faster Rust-based
+  bundler); add `rolldown.config.ts`, remove `rollup.config.mjs`
+- Refactor: replace `eslint` + `prettier` with `oxlint` + `oxfmt`
+  (Rust-based linter and formatter); add `oxlint.config.ts` and
+  `oxfmt.config.ts`; remove `eslint.config.mjs` and `.prettierrc.yml`
+- Add: `Prev` mapped type in `types.types.ts` — bounded recursion depth
+  (max 10) for `__Decompose`, `_DecomposeTupleElement` and
+  `_DecomposeTupleRec`, preventing infinite type instantiation
+- Fix: `expectTypeOf` call syntax in `decompose.test-d.ts` — added missing
+  call parentheses `()`
+- Update: TypeScript from `5.x` to `6.x`
+- Update: move `@bemedev/build-tests` from `dependencies` to
+  `devDependencies`
+- Update: add `@bemedev/rolldown-config`, `@bemedev/sequence`, `rxjs`,
+  `tsx`, `tsc-alias`, `@vitest/ui`, `@types/clone-deep` as dev
+  dependencies; remove `immer`, legacy rollup plugins and eslint packages
+- Update: enhance CI script with elapsed-time reporting; reorganize and
+  extend npm scripts (`lint:watch`, `build:watch`, `test:type`,
+  `test:no-type`, `test:ui`, `rm:lib`, `fmt`)
+- <u>Test coverage **_100%_**</u>
+
+</details>
+
+<br/>
+
+<details>
+<summary>
+
 ## **[2.0.3] - 02/03/2026** => _00:46_
 
 </summary>

@@ -104,8 +104,7 @@ type _DecomposeTupleElement<
   ? EmptyObject
   : TK2 extends types.AnyArray<infer A>
     ? number extends TK2['length']
-      ? // Dynamic array inside tuple element - use UnionToIntersection to preserve template literal keys
-        (wo extends 'object' | 'both'
+      ? ([wo] extends ['object' | 'both']
           ? Record<KeyPrefix, TK2>
           : EmptyObject) &
           (A extends Ru
@@ -118,25 +117,24 @@ type _DecomposeTupleElement<
                   Prev[D]
                 >
               > &
-                (wo extends 'object' | 'both'
+                ([wo] extends ['object' | 'both']
                   ? { [Key in `${KeyPrefix}${sep}[${number}]`]: A }
                   : EmptyObject)
-            : wo extends 'key' | 'both'
+            : [wo] extends ['key' | 'both']
               ? { [Key in `${KeyPrefix}${sep}[${number}]`]: A }
               : EmptyObject)
-      : // Nested tuple inside tuple element
-        _DecomposeTupleRec<TK2, sep, wo, KeyPrefix, [], D> &
-          (wo extends 'object' | 'both'
+      : _DecomposeTupleRec<TK2, sep, wo, KeyPrefix, [], D> &
+          ([wo] extends ['object' | 'both']
             ? Record<KeyPrefix, TK2>
             : EmptyObject)
     : TK2 extends Ru
       ? types.UnionToIntersection<
           __Decompose<TK2, sep, wo, `${KeyPrefix}${sep}`, Prev[D]>
         > &
-          (wo extends 'object' | 'both'
+          ([wo] extends ['object' | 'both']
             ? Record<KeyPrefix, TK2>
             : EmptyObject)
-      : wo extends 'key' | 'both'
+      : [wo] extends ['key' | 'both']
         ? Record<KeyPrefix, TK2>
         : EmptyObject;
 
@@ -168,62 +166,62 @@ type __Decompose<
 > = D extends 0
   ? EmptyObject
   : {
-      [k in Exclude<keyof T, undefined>]: T[k] extends infer Tk
-        ? types._UnionToIntersection2<
-            Tk extends types.AnyArray<infer A>
-              ? number extends Tk['length']
-                ? (wo extends 'object' | 'both'
-                    ? Record<`${Remaining}${k & string}`, Tk>
-                    : EmptyObject) &
-                    (A extends Ru
-                      ? types.UnionToIntersection<
-                          __Decompose<
-                            A,
-                            sep,
-                            wo,
-                            `${Remaining}${k & string}${sep}[${number}]${sep}`,
-                            Prev[D]
-                          >
-                        > &
-                          (wo extends 'object' | 'both'
-                            ? {
-                                [Key in `${Remaining}${k & string}${sep}[${number}]`]: A;
-                              }
-                            : EmptyObject)
-                      : wo extends 'key' | 'both'
+      [k in Exclude<keyof T, undefined>]: Exclude<
+        T[k],
+        undefined
+      > extends infer TkNN
+        ? TkNN extends types.AnyArray<infer A>
+          ? number extends TkNN['length']
+            ? ([wo] extends ['object' | 'both']
+                ? Record<`${Remaining}${k & string}`, T[k]>
+                : EmptyObject) &
+                (A extends Ru
+                  ? types.UnionToIntersection<
+                      __Decompose<
+                        A,
+                        sep,
+                        wo,
+                        `${Remaining}${k & string}${sep}[${number}]${sep}`,
+                        Prev[D]
+                      >
+                    > &
+                      ([wo] extends ['object' | 'both']
                         ? {
                             [Key in `${Remaining}${k & string}${sep}[${number}]`]: A;
                           }
                         : EmptyObject)
-                : // Tuple - use recursive helper that produces intersection directly
-                  _DecomposeTupleRec<
-                    Tk,
-                    sep,
-                    wo,
-                    `${Remaining}${k & string}`,
-                    [],
-                    D
-                  > &
-                    (wo extends 'object' | 'both'
-                      ? Record<`${Remaining}${k & string}`, Tk>
-                      : EmptyObject)
-              : Tk extends Ru
-                ? EmptyObject extends Required<Tk>
-                  ? Record<`${Remaining}${k & string}`, Tk>
-                  : __Decompose<
-                      Tk,
-                      sep,
-                      wo,
-                      `${Remaining}${k & string}${sep}`,
-                      Prev[D]
-                    > &
-                      (wo extends 'object' | 'both'
-                        ? Record<`${Remaining}${k & string}`, Tk>
-                        : EmptyObject)
-                : wo extends 'key' | 'both'
-                  ? Record<`${Remaining}${k & string}`, Tk>
-                  : never
-          >
+                  : [wo] extends ['key' | 'both']
+                    ? {
+                        [Key in `${Remaining}${k & string}${sep}[${number}]`]: A;
+                      }
+                    : EmptyObject)
+            : _DecomposeTupleRec<
+                TkNN & readonly unknown[],
+                sep,
+                wo,
+                `${Remaining}${k & string}`,
+                [],
+                D
+              > &
+                ([wo] extends ['object' | 'both']
+                  ? Record<`${Remaining}${k & string}`, T[k]>
+                  : EmptyObject)
+          : TkNN extends Ru
+            ? EmptyObject extends Required<TkNN>
+              ? Record<`${Remaining}${k & string}`, T[k]>
+              : __Decompose<
+                  TkNN,
+                  sep,
+                  wo,
+                  `${Remaining}${k & string}${sep}`,
+                  Prev[D]
+                > &
+                  ([wo] extends ['object' | 'both']
+                    ? Record<`${Remaining}${k & string}`, T[k]>
+                    : EmptyObject)
+            : [wo] extends ['key' | 'both']
+              ? Record<`${Remaining}${k & string}`, T[k]>
+              : EmptyObject
         : never;
     }[Exclude<keyof T, undefined>];
 // #endregion
