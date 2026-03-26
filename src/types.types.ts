@@ -217,23 +217,20 @@ type _Decompose<
   sep extends string = O['sep'] extends string
     ? O['sep']
     : DefaultDecomposeOptions['sep'],
+  wo extends WO = O['object'] extends WO
+    ? O['object']
+    : DefaultDecomposeOptions['object'],
+  start extends string = O['start'] extends infer S extends boolean
+    ? S extends true
+      ? sep
+      : ''
+    : sep,
 > =
   EmptyObject extends Required<T>
     ? EmptyObject
     : T extends types.AnyArray
       ? types.UnionToIntersection<
-          __Decompose<
-            { ' ': T },
-            sep,
-            O['object'] extends WO
-              ? O['object']
-              : DefaultDecomposeOptions['object'],
-            O['start'] extends infer S extends boolean
-              ? S extends true
-                ? sep
-                : ''
-              : sep
-          >
+          __Decompose<{ ' ': T }, sep, wo, start>
         > extends infer P1
         ? {
             [K in keyof P1 as K extends `${sep} ${infer P}`
@@ -243,27 +240,14 @@ type _Decompose<
               : never]: P1[K];
           }
         : never
-      : types.UnionToIntersection<
-          __Decompose<
-            T,
-            sep,
-            O['object'] extends WO
-              ? O['object']
-              : DefaultDecomposeOptions['object'],
-            O['start'] extends infer S extends boolean
-              ? S extends true
-                ? sep
-                : ''
-              : sep
-          >
-        >;
+      : types.UnionToIntersection<__Decompose<T, sep, wo, start>>;
 
 export type ReduceParentsKeys<T, sep extends string = '.'> = {
-  [K in keyof T]-?: undefined extends T[K]
+  [K in keyof T]-?: undefined extends
+    | T[K]
+    | T[GetParents<K & string, sep> & keyof T]
     ? true
-    : undefined extends T[GetParents<K & string, sep> & keyof T]
-      ? true
-      : false;
+    : false;
 };
 
 export type Decompose<
@@ -405,9 +389,7 @@ export type Recompose3<T extends types.To> = keyof T extends never
   : keyof T extends IndexString
     ? types.ValuesOf<T>[]
     : {
-        [K in keyof T]: T[K] extends infer TK extends types.To
-          ? Recompose3<TK>
-          : T[K];
+        [K in keyof T]: T[K] extends types.To ? Recompose3<T[K]> : T[K];
       };
 
 // #endregion
