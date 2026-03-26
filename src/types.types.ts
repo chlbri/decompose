@@ -78,33 +78,17 @@ type WO = 'key' | 'object' | 'both';
 
 // #region type _Decompose
 
-// Maps depth D to D-1, enabling bounded recursion (max depth = 10)
-type Prev = {
-  0: never;
-  1: 0;
-  2: 1;
-  3: 2;
-  4: 3;
-  5: 4;
-  6: 5;
-  7: 6;
-  8: 7;
-  9: 8;
-  10: 9;
-};
-
 // Helper type for decomposing a single tuple element
 type _DecomposeTupleElement<
   TK2,
   sep extends string,
   wo extends WO,
   KeyPrefix extends string,
-  D extends keyof Prev = 10,
-> = D extends 0
-  ? EmptyObject
-  : TK2 extends types.AnyArray<infer A>
+> =
+  TK2 extends types.AnyArray<infer A>
     ? number extends TK2['length']
-      ? ([wo] extends ['object' | 'both']
+      ? // Dynamic array inside tuple element - use UnionToIntersection to preserve template literal keys
+        (wo extends 'object' | 'both'
           ? Record<KeyPrefix, TK2>
           : EmptyObject) &
           (A extends Ru
@@ -113,28 +97,28 @@ type _DecomposeTupleElement<
                   A,
                   sep,
                   wo,
-                  `${KeyPrefix}${sep}[${number}]${sep}`,
-                  Prev[D]
+                  `${KeyPrefix}${sep}[${number}]${sep}`
                 >
               > &
-                ([wo] extends ['object' | 'both']
+                (wo extends 'object' | 'both'
                   ? { [Key in `${KeyPrefix}${sep}[${number}]`]: A }
                   : EmptyObject)
-            : [wo] extends ['key' | 'both']
+            : wo extends 'key' | 'both'
               ? { [Key in `${KeyPrefix}${sep}[${number}]`]: A }
               : EmptyObject)
-      : _DecomposeTupleRec<TK2, sep, wo, KeyPrefix, [], D> &
-          ([wo] extends ['object' | 'both']
+      : // Nested tuple inside tuple element
+        _DecomposeTupleRec<TK2, sep, wo, KeyPrefix> &
+          (wo extends 'object' | 'both'
             ? Record<KeyPrefix, TK2>
             : EmptyObject)
     : TK2 extends Ru
       ? types.UnionToIntersection<
-          __Decompose<TK2, sep, wo, `${KeyPrefix}${sep}`, Prev[D]>
+          __Decompose<TK2, sep, wo, `${KeyPrefix}${sep}`>
         > &
-          ([wo] extends ['object' | 'both']
+          (wo extends 'object' | 'both'
             ? Record<KeyPrefix, TK2>
             : EmptyObject)
-      : [wo] extends ['key' | 'both']
+      : wo extends 'key' | 'both'
         ? Record<KeyPrefix, TK2>
         : EmptyObject;
 
@@ -145,35 +129,28 @@ type _DecomposeTupleRec<
   wo extends WO,
   Prefix extends string,
   I extends readonly unknown[] = [],
-  D extends keyof Prev = 10,
 > = I['length'] extends Tk['length']
   ? EmptyObject
   : _DecomposeTupleElement<
       Tk[I['length']],
       sep,
       wo,
-      `${Prefix}${sep}[${I['length']}]`,
-      D
+      `${Prefix}${sep}[${I['length']}]`
     > &
-      _DecomposeTupleRec<Tk, sep, wo, Prefix, [...I, unknown], D>;
+      _DecomposeTupleRec<Tk, sep, wo, Prefix, [...I, unknown]>;
 
 type __Decompose<
   T,
   sep extends string = '.',
   wo extends WO = 'key',
   Remaining extends string = '',
-  D extends keyof Prev = 10,
-> = D extends 0
-  ? EmptyObject
-  : {
-      [k in Exclude<keyof T, undefined>]: Exclude<
-        T[k],
-        undefined
-      > extends infer TkNN
-        ? TkNN extends types.AnyArray<infer A>
-          ? number extends TkNN['length']
-            ? ([wo] extends ['object' | 'both']
-                ? Record<`${Remaining}${k & string}`, T[k]>
+> = {
+  [k in Exclude<keyof T, undefined>]: T[k] extends infer Tk
+    ? types._UnionToIntersection2<
+        Tk extends types.AnyArray<infer A>
+          ? number extends Tk['length']
+            ? (wo extends 'object' | 'both'
+                ? Record<`${Remaining}${k & string}`, Tk>
                 : EmptyObject) &
                 (A extends Ru
                   ? types.UnionToIntersection<
@@ -181,49 +158,47 @@ type __Decompose<
                         A,
                         sep,
                         wo,
-                        `${Remaining}${k & string}${sep}[${number}]${sep}`,
-                        Prev[D]
+                        `${Remaining}${k & string}${sep}[${number}]${sep}`
                       >
                     > &
-                      ([wo] extends ['object' | 'both']
+                      (wo extends 'object' | 'both'
                         ? {
                             [Key in `${Remaining}${k & string}${sep}[${number}]`]: A;
                           }
                         : EmptyObject)
-                  : [wo] extends ['key' | 'both']
+                  : wo extends 'key' | 'both'
                     ? {
                         [Key in `${Remaining}${k & string}${sep}[${number}]`]: A;
                       }
                     : EmptyObject)
-            : _DecomposeTupleRec<
-                TkNN & readonly unknown[],
+            : // Tuple - use recursive helper that produces intersection directly
+              _DecomposeTupleRec<
+                Tk,
                 sep,
                 wo,
-                `${Remaining}${k & string}`,
-                [],
-                D
+                `${Remaining}${k & string}`
               > &
-                ([wo] extends ['object' | 'both']
-                  ? Record<`${Remaining}${k & string}`, T[k]>
+                (wo extends 'object' | 'both'
+                  ? Record<`${Remaining}${k & string}`, Tk>
                   : EmptyObject)
-          : TkNN extends Ru
-            ? EmptyObject extends Required<TkNN>
-              ? Record<`${Remaining}${k & string}`, T[k]>
+          : Tk extends Ru
+            ? EmptyObject extends Required<Tk>
+              ? Record<`${Remaining}${k & string}`, Tk>
               : __Decompose<
-                  TkNN,
+                  Tk,
                   sep,
                   wo,
-                  `${Remaining}${k & string}${sep}`,
-                  Prev[D]
+                  `${Remaining}${k & string}${sep}`
                 > &
-                  ([wo] extends ['object' | 'both']
-                    ? Record<`${Remaining}${k & string}`, T[k]>
+                  (wo extends 'object' | 'both'
+                    ? Record<`${Remaining}${k & string}`, Tk>
                     : EmptyObject)
-            : [wo] extends ['key' | 'both']
-              ? Record<`${Remaining}${k & string}`, T[k]>
-              : EmptyObject
-        : never;
-    }[Exclude<keyof T, undefined>];
+            : wo extends 'key' | 'both'
+              ? Record<`${Remaining}${k & string}`, Tk>
+              : never
+      >
+    : never;
+}[Exclude<keyof T, undefined>];
 // #endregion
 
 export type DecomposeOptions = {

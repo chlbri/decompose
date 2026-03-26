@@ -334,3 +334,83 @@ expectTypeOf<TArray1>().toEqualTypeOf<{
   '.[1]': 2;
   '.[2]': 3;
 }>();
+
+type StateValue = string | StateValueMap;
+
+interface StateValueMap {
+  [key: string]: StateValue;
+}
+
+type DSF2 = keyof Decompose<
+  {
+    context: {
+      readonly iterator: number;
+      readonly input: string;
+      readonly data: string[];
+    };
+    status: 'WorkingStatus';
+    value: StateValue;
+    event:
+      | {
+          type: 'machine$$init';
+          payload: {};
+        }
+      | {
+          type: 'machine$$exceeded';
+          payload: {};
+        }
+      | {
+          type: 'machine$$always';
+          payload: {};
+        }
+      | {
+          type: 'NEXT';
+          payload: {};
+        }
+      | {
+          type: 'FINISH';
+          payload: {};
+        }
+      | {
+          type: 'FETCH';
+          payload: {};
+        }
+      | {
+          type: 'WRITE';
+          payload: {
+            readonly value: string;
+          };
+        }
+      | {
+          type: 'fetch::then';
+          payload: string[];
+        }
+      | {
+          type: 'fetch::catch';
+          payload: {};
+        }
+      | {
+          type: 'machine1::on::NEXT';
+          payload: {};
+        };
+    tags?: string | string[];
+  },
+  { sep: '.'; object: 'both'; start: false }
+>;
+
+expectTypeOf<DSF2>().toEqualTypeOf<
+  | 'tags'
+  | 'context'
+  | 'value'
+  | 'context.iterator'
+  | 'context.input'
+  | 'context.data'
+  | `context.data.[${number}]`
+  | 'status'
+  | 'event'
+  | `tags.[${number}]`
+  | 'event.type'
+  | 'event.payload'
+  | 'event.payload.value'
+  | `event.payload.[${number}]`
+>();
