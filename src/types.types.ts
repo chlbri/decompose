@@ -15,15 +15,17 @@ type RemoveLast<
     : Rest
   : never;
 
-type _GetParents<A extends string, sep extends string> = A extends sep
-  ? never
-  : A extends `${string}${sep}${string}`
-    ? RemoveLast<A, sep> | GetParents<RemoveLast<A, sep>, sep>
-    : never;
 export type GetParents<
   A extends string,
   sep extends string = typeof SEPARATOR,
-> = Exclude<_GetParents<A, sep>, ''>;
+> = Exclude<
+  A extends sep
+    ? never
+    : A extends `${string}${sep}${string}`
+      ? RemoveLast<A, sep> | GetParents<RemoveLast<A, sep>, sep>
+      : never,
+  ''
+>;
 // #endregion
 
 export type StateMatching<
@@ -242,29 +244,25 @@ type _Decompose<
           }
         : never
       : types.UnionToIntersection<
-            __Decompose<
-              T,
-              sep,
-              O['object'] extends WO
-                ? O['object']
-                : DefaultDecomposeOptions['object'],
-              O['start'] extends infer S extends boolean
-                ? S extends true
-                  ? sep
-                  : ''
-                : sep
-            >
-          > extends infer P
-        ? P
-        : never;
+          __Decompose<
+            T,
+            sep,
+            O['object'] extends WO
+              ? O['object']
+              : DefaultDecomposeOptions['object'],
+            O['start'] extends infer S extends boolean
+              ? S extends true
+                ? sep
+                : ''
+              : sep
+          >
+        >;
 
 export type ReduceParentsKeys<T, sep extends string = '.'> = {
   [K in keyof T]-?: undefined extends T[K]
     ? true
-    : GetParents<K & string, sep> extends infer K2 extends keyof T
-      ? undefined extends T[K2]
-        ? true
-        : false
+    : undefined extends T[GetParents<K & string, sep> & keyof T]
+      ? true
       : false;
 };
 
@@ -275,17 +273,13 @@ export type Decompose<
     ? O['sep']
     : DefaultDecomposeOptions['sep'],
 > =
-  _Decompose<T, O> extends infer D extends _Decompose<T, O>
-    ? ReduceParentsKeys<D, sep> extends infer RPK extends
-        ReduceParentsKeys<D, sep>
+  _Decompose<T, O, sep> extends infer D extends {}
+    ? ReduceParentsKeys<D, sep> extends infer RPK extends Record<
+        keyof D,
+        boolean
+      >
       ? {
-          [K in keyof D]:
-            | D[K]
-            | (RPK[K] extends true
-                ? undefined
-                : RPK[K] extends never
-                  ? undefined
-                  : never);
+          [K in keyof D]: D[K] | (RPK[K] extends true ? undefined : never);
         }
       : never
     : never;

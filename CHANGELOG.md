@@ -7,6 +7,41 @@ All notable changes to this project will be documented in this file.
 <details>
 <summary>
 
+## **[2.2.0] - 26/03/2026** => _15:54_
+
+</summary>
+
+- Refactor: simplify `Decompose` type inference in `types.types.ts` —
+  reduce TypeScript evaluation cost across the whole chain:
+  - Remove intermediate `_GetParents` alias; inline body directly into
+    `GetParents`, cutting one level of indirection per recursive call
+  - Simplify `ReduceParentsKeys` — replace
+    `GetParents<...> extends infer K2 extends keyof T` with direct index
+    `T[GetParents<K & string, sep> & keyof T]`
+  - Remove no-op `extends infer P ? P : never` wrapper in non-array branch
+    of `_Decompose`
+  - Simplify `Decompose` constrained infers: use `extends {}` and
+    `extends Record<keyof D, boolean>` instead of re-evaluating full mapped
+    types; pass resolved `sep` explicitly to `_Decompose`; remove dead
+    `RPK[K] extends never` branch
+- Refactor: remove `Prev` depth-counter map and `D extends 0 ? EmptyObject`
+  guards from `_DecomposeTupleElement`, `_DecomposeTupleRec` and
+  `__Decompose` — TypeScript resolves these types correctly without
+  artificial depth limits
+- Refactor: replace `[wo] extends [...]` distributive-union guards with
+  plain `wo extends ...` in all tuple and decompose helpers
+- Add: extended type tests in `decompose.test-d.ts` — new `DSF2` test
+  covering `StateValue` union, `object: 'both'`, `start: false`, dynamic
+  array keys and union-payload decomposition
+- <u>Test coverage **_100%_**</u>
+
+</details>
+
+<br/>
+
+<details>
+<summary>
+
 ## **[2.1.0] - 26/03/2026** => _14:19_
 
 </summary>
