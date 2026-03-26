@@ -295,7 +295,7 @@ expectTypeOf(ttD6K).toEqualTypeOf<{
   iterator: number;
   input: string;
   [x: `data.[${number}]`]: string;
-}>;
+}>();
 
 const _ttd7 = {
   iterator: 0,

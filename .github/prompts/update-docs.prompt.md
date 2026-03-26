@@ -104,4 +104,5 @@ Update CHANGELOG.md with version X.Y.Z changes
 @chlbri:bri_lvi@icloud.com
 ```
 
-IMPORTANT: ONLY IN ENGLISH, NO CHANGELOG or README in any other language. LAWAYS IN ENGLISH !!!!
+IMPORTANT: ONLY IN ENGLISH, NO CHANGELOG or README in any other language.
+LAWAYS IN ENGLISH !!!!
