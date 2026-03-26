@@ -151,4 +151,4 @@ expectTypeOf(ttD).toEqualTypeOf<{
 
   '/stringA': string[] | undefined;
   '/stringB': { toto: string }[];
-}>;
+}>();
