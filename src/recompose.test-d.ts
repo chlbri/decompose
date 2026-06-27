@@ -193,3 +193,67 @@ const et44 = recompose({
 expectTypeOf(et44).toEqualTypeOf<{
   arr: number[];
 }>();
+
+// #region Options
+// #region Option: sep
+const etOptionSep = recompose.strict(
+  {
+    '/data/age': 54,
+    '/data/login': 'login',
+  },
+  { sep: '/', start: true },
+);
+expectTypeOf(etOptionSep).toEqualTypeOf<{
+  readonly data: {
+    age: 54;
+    login: 'login';
+  };
+}>();
+
+const etOptionSepLow = recompose(
+  {
+    '/data/age': 54,
+    '/data/login': 'login',
+  },
+  { sep: '/', start: true },
+);
+expectTypeOf(etOptionSepLow).toEqualTypeOf<{
+  data: {
+    age: number;
+    login: string;
+  };
+}>();
+// #endregion
+
+// #region Option: start
+const etOptionStartFalse = recompose.strict(
+  {
+    'data.age': 54,
+    'data.login': 'login',
+  },
+  { start: false },
+);
+expectTypeOf(etOptionStartFalse).toEqualTypeOf<{
+  readonly data: {
+    age: 54;
+    login: 'login';
+  };
+}>();
+// #endregion
+
+// #region Option: both
+const etOptionBoth = recompose.strict(
+  {
+    'data/age': 54,
+    'data/login': 'login',
+  },
+  { sep: '/', start: false },
+);
+expectTypeOf(etOptionBoth).toEqualTypeOf<{
+  readonly data: {
+    age: 54;
+    login: 'login';
+  };
+}>();
+// #endregion
+// #endregion

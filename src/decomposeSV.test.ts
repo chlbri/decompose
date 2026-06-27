@@ -1,4 +1,4 @@
-import { createTests } from '@bemedev/vitest-extended';
+import { createTests } from '@bemedev/dev-utils/vitest-extended';
 import { decomposeSV } from './decomposeSV';
 
 describe('decomposeSV', () => {
@@ -78,4 +78,8 @@ describe('decomposeSV', () => {
       },
     ),
   );
+
+  test('#02 = coverage', () => {
+    expect(decomposeSV({})).toEqual([]);
+  });
 });

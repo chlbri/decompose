@@ -1,4 +1,4 @@
-import { createTests } from '@bemedev/vitest-extended';
+import { createTests } from '@bemedev/dev-utils/vitest-extended';
 import { decompose } from './decompose';
 import { ttest0, ttest1, ttest2, ttest3, ttest4 } from './fixtures';
 import { recompose, recomposeObjectUrl } from './recompose';
@@ -6,10 +6,10 @@ import { recompose, recomposeObjectUrl } from './recompose';
 describe('recompose', () => {
   describe('#01 => URL for coverage', () => {
     const { acceptation, success } = createTests(recomposeObjectUrl);
-    describe('#01.00 => Acceptation', acceptation);
+    describe('#00 => Acceptation', acceptation);
 
     describe(
-      '#01.01 => Success',
+      '#01 => Success',
       success({
         invite: 'Empty string',
         parameters: ['', 10],
@@ -20,10 +20,10 @@ describe('recompose', () => {
 
   describe('#02 => recompose', () => {
     const { acceptation, success } = createTests(recompose);
-    describe('#02.00 => Acceptation', acceptation);
+    describe('#00 => Acceptation', acceptation);
 
     describe(
-      '#02.01 => Success',
+      '#01 => Success',
       success(
         { invite: 'Empty object', parameters: [{}], expected: {} },
         {
@@ -226,7 +226,7 @@ describe('recompose', () => {
 
   describe('#03 => decompose, recompose', () => {
     [ttest0, ttest1, ttest2, ttest3, ttest4].forEach((testCase, index) => {
-      test(`#03.0${index} => For ttest-${index}`, () => {
+      test(`#0${index} => For ttest-${index}`, () => {
         expect(
           recompose(
             decompose(recompose(decompose(testCase, { start: false })), {
@@ -238,36 +238,13 @@ describe('recompose', () => {
     });
   });
 
-  describe('#04 => Real tests', () => {
-    test('#04.01 => ooo', () => {
-      const decomposed = {
-        states: {
-          idle: {
-            on: {},
-          },
-          state1: {
-            activities: {
-              DELAY: 'inc',
-            },
-            states: {
-              state11: {
-                states: {
-                  state111: {
-                    states: {
-                      state1111: {},
-                    },
-                  },
-                  state112: {},
-                },
-              },
-            },
-          },
-        },
-        'states.idle': {
+  test('#04 => Real tests', () => {
+    const decomposed = {
+      states: {
+        idle: {
           on: {},
         },
-        'states.idle.on': {},
-        'states.state1': {
+        state1: {
           activities: {
             DELAY: 'inc',
           },
@@ -284,11 +261,16 @@ describe('recompose', () => {
             },
           },
         },
-        'states.state1.activities': {
+      },
+      'states.idle': {
+        on: {},
+      },
+      'states.idle.on': {},
+      'states.state1': {
+        activities: {
           DELAY: 'inc',
         },
-        'states.state1.activities.DELAY': 'inc',
-        'states.state1.states': {
+        states: {
           state11: {
             states: {
               state111: {
@@ -300,7 +282,13 @@ describe('recompose', () => {
             },
           },
         },
-        'states.state1.states.state11': {
+      },
+      'states.state1.activities': {
+        DELAY: 'inc',
+      },
+      'states.state1.activities.DELAY': 'inc',
+      'states.state1.states': {
+        state11: {
           states: {
             state111: {
               states: {
@@ -310,7 +298,9 @@ describe('recompose', () => {
             state112: {},
           },
         },
-        'states.state1.states.state11.states': {
+      },
+      'states.state1.states.state11': {
+        states: {
           state111: {
             states: {
               state1111: {},
@@ -318,46 +308,151 @@ describe('recompose', () => {
           },
           state112: {},
         },
-        'states.state1.states.state11.states.state111': {
+      },
+      'states.state1.states.state11.states': {
+        state111: {
           states: {
             state1111: {},
           },
         },
-        'states.state1.states.state11.states.state111.states': {
+        state112: {},
+      },
+      'states.state1.states.state11.states.state111': {
+        states: {
           state1111: {},
         },
-        'states.state1.states.state11.states.state111.states.state1111':
-          {},
-        'states.state1.states.state11.states.state112': {},
-      };
+      },
+      'states.state1.states.state11.states.state111.states': {
+        state1111: {},
+      },
+      'states.state1.states.state11.states.state111.states.state1111': {},
+      'states.state1.states.state11.states.state112': {},
+    };
 
-      const actual = recompose(decomposed);
-      const expected = {
-        states: {
-          idle: {
-            on: {},
+    const actual = recompose(decomposed);
+    const expected = {
+      states: {
+        idle: {
+          on: {},
+        },
+        state1: {
+          activities: {
+            DELAY: 'inc',
           },
-          state1: {
-            activities: {
-              DELAY: 'inc',
-            },
-            states: {
-              state11: {
-                states: {
-                  state111: {
-                    states: {
-                      state1111: {},
-                    },
+          states: {
+            state11: {
+              states: {
+                state111: {
+                  states: {
+                    state1111: {},
                   },
-                  state112: {},
                 },
+                state112: {},
               },
             },
           },
         },
-      };
+      },
+    };
 
-      expect(actual).toEqual(expected);
+    expect(actual).toEqual(expected);
+  });
+
+  describe('#05 => Options tests', () => {
+    test('#01 => Custom separator "/"', () => {
+      const flat = {
+        '/data/name': 'Charles',
+        '/data/age': 30,
+      };
+      const expected = {
+        data: {
+          name: 'Charles',
+          age: 30,
+        },
+      };
+      expect(recompose(flat, { sep: '/' })).toEqual(expected);
+    });
+
+    test('#02 => Custom separator "/" and start = false', () => {
+      const flat = {
+        'data/name': 'Charles',
+        'data/age': 30,
+      };
+      const expected = {
+        data: {
+          name: 'Charles',
+          age: 30,
+        },
+      };
+      expect(recompose(flat, { sep: '/', start: false })).toEqual(
+        expected,
+      );
+    });
+
+    test('#03 => Default separator "." and start = false', () => {
+      const flat = {
+        'data.name': 'Charles',
+        'data.age': 30,
+      };
+      const expected = {
+        data: {
+          name: 'Charles',
+          age: 30,
+        },
+      };
+      expect(recompose(flat, { start: false })).toEqual(expected);
+    });
+
+    test('#04 => object = "both"', () => {
+      const flat = {
+        data: { name: 'Charles' },
+        'data.name': 'Charles',
+      };
+      const expected = {
+        data: {
+          name: 'Charles',
+        },
+      };
+      expect(recompose(flat, { start: false, object: 'both' })).toEqual(
+        expected,
+      );
+    });
+
+    test('#05 => start = true but key has no leading sep', () => {
+      const flat = {
+        'data.name': 'Charles',
+        'data.age': 30,
+      };
+      const expected = {
+        data: {
+          name: 'Charles',
+          age: 30,
+        },
+      };
+      expect(recompose(flat, { start: true })).toEqual(expected);
+    });
+  });
+
+  describe('#06 => decompose / recompose roundtrip with options', () => {
+    const optionsList = [
+      { start: true, sep: '.' },
+      { start: false, sep: '.' },
+      { start: true, sep: '/' },
+      { start: false, sep: '/' },
+      { start: true, sep: '.', object: 'object' },
+      { start: true, sep: '.', object: 'both' },
+    ] as const;
+
+    let index = 0;
+    optionsList.forEach(options => {
+      [ttest1, ttest2, ttest3, ttest4].forEach((testCase, caseIdx) => {
+        test(`#06.${index} => Options: ${JSON.stringify(options)} for ttest-${caseIdx}`, () => {
+          const flat = decompose(testCase, options);
+          const restored = recompose.low(flat, options);
+          expect(restored).toEqual(testCase);
+        });
+        index++;
+      });
     });
   });
 });

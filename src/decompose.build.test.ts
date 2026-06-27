@@ -1,5 +1,5 @@
-import { this1 } from '@bemedev/build-tests/constants';
-import { createTests } from '@bemedev/vitest-extended';
+import { THIS1 } from '@bemedev/dev-utils/build-tests';
+import { createTests } from '@bemedev/dev-utils/vitest-extended';
 import {
   dumbFn,
   TEST_SKIP,
@@ -14,7 +14,7 @@ describe.skipIf(TEST_SKIP)('decompose', () => {
   const { acceptation, success } = createTests.withImplementation(dumbFn, {
     name: 'decompose',
     instanciation: async () => {
-      const func = await import(this1).then(({ decompose }) => decompose);
+      const func = await import(THIS1).then(({ decompose }) => decompose);
 
       return func.strict;
     },

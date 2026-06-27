@@ -1,12 +1,12 @@
-import { this1 } from '@bemedev/build-tests/constants';
-import { createTests } from '@bemedev/vitest-extended';
+import { THIS1 } from '@bemedev/dev-utils/build-tests';
+import { createTests } from '@bemedev/dev-utils/vitest-extended';
 import { dumbFn, TEST_SKIP, ttest1, ttest2, ttest3 } from './fixtures';
 
 describe.skipIf(TEST_SKIP)('recompose', () => {
   const { acceptation, success } = createTests.withImplementation(dumbFn, {
     name: 'recompose',
     instanciation: async () => {
-      const func = await import(this1).then(({ recompose }) => recompose);
+      const func = await import(THIS1).then(({ recompose }) => recompose);
 
       return func.low;
     },
@@ -333,6 +333,22 @@ describe.skipIf(TEST_SKIP)('recompose', () => {
         invite: 'So complex',
         expected,
         parameters: decomposed,
+      },
+      {
+        invite: 'Custom separator "/" and start=true',
+        parameters: [
+          { '/data/name': 'Charles', '/data/age': 30 },
+          { sep: '/' },
+        ],
+        expected: { data: { name: 'Charles', age: 30 } },
+      },
+      {
+        invite: 'Custom separator "/" and start=false',
+        parameters: [
+          { 'data/name': 'Charles', 'data/age': 30 },
+          { sep: '/', start: false },
+        ],
+        expected: { data: { name: 'Charles', age: 30 } },
       },
     ),
   );

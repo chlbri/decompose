@@ -1,4 +1,4 @@
-import { createTests } from '@bemedev/vitest-extended';
+import { createTests } from '@bemedev/dev-utils/vitest-extended';
 import { flatByKey1 } from './fixtures';
 import { flatByKey } from './flatByKey';
 

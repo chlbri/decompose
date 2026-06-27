@@ -1,4 +1,4 @@
-import { createTests } from '@bemedev/vitest-extended';
+import { createTests } from '@bemedev/dev-utils/vitest-extended';
 import { decomposeKeys } from './decomposeKeys';
 import { ttest0, ttest1, ttest2 } from './fixtures';
 

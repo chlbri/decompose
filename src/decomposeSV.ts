@@ -40,7 +40,6 @@ const _decomposeSV: _DecomposeSV_F = (val, sorter = sortMap) => {
   return output1.map(value => value.replace(regex, '.'));
 };
 
-/* v8 ignore next 3 */
 export const decomposeSV: DecomposeSV = (val, sorter) => {
   return castings.commons.any(_decomposeSV(val, sorter));
 };

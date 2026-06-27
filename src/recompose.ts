@@ -1,18 +1,23 @@
 import { merge } from 'ts-deepmerge';
+import { DEFAULT_DECOMPOSE_OPTIONS } from './constants';
 import { SEPARATOR } from './constants/strings';
-import type { Recompose, Ru } from './types.types';
+import type { DecomposeOptions, Recompose, Ru } from './types.types';
 
-export function recomposeObjectUrl<T>(shape: string, value: T) {
+export function recomposeObjectUrl<T>(
+  shape: string,
+  value: T,
+  sep: string = SEPARATOR,
+) {
   const obj: Ru = {};
   if (shape.length <= 0) return obj;
 
-  const keys = shape.split(SEPARATOR);
+  const keys = shape.split(sep);
   if (keys.length === 1) {
     const key = keys.shift();
     obj[key!] = value;
   } else {
     const key = keys.shift();
-    obj[key!] = recomposeObjectUrl(keys.join(SEPARATOR), value);
+    obj[key!] = recomposeObjectUrl(keys.join(sep), value, sep);
   }
 
   return obj;
@@ -38,26 +43,44 @@ export function recomposeObjectUrl<T>(shape: string, value: T) {
  *  @todo
     Add type to the return
  */
-type Recompose_F = <const T extends Ru>(shape: T) => Recompose<T>;
-type _Recompose_F = (shape: any) => any;
-type _Recompose2_F = <T extends Ru>(shape: T) => Recompose<T>;
+type Recompose_F = <
+  const T extends Ru,
+  const O extends DecomposeOptions = typeof DEFAULT_DECOMPOSE_OPTIONS,
+>(
+  shape: T,
+  options?: O,
+) => Recompose<T, O>;
+type _Recompose_F = (shape: any, options?: DecomposeOptions) => any;
+type _Recompose2_F = <
+  T extends Ru,
+  const O extends DecomposeOptions = typeof DEFAULT_DECOMPOSE_OPTIONS,
+>(
+  shape: T,
+  options?: O,
+) => Recompose<T, O>;
 
 export type Recomposer = _Recompose2_F & {
   strict: Recompose_F;
   low: _Recompose_F;
 };
 
-const _recompose: _Recompose_F = shape => {
+const _recompose: _Recompose_F = (shape, options) => {
+  const { sep, start } = {
+    ...DEFAULT_DECOMPOSE_OPTIONS,
+    ...options,
+  };
   const entries = Object.entries(shape);
   if (entries.length === 0) return {};
   const arr: any[] = [];
   entries.forEach(([key, value]) => {
-    arr.push(recomposeObjectUrl(key, value));
+    const cleanKey =
+      start && key.startsWith(sep) ? key.slice(sep.length) : key;
+    arr.push(recomposeObjectUrl(cleanKey, value, sep));
   });
   return _recompose2(merge(...arr));
 };
 
-const _recompose2: _Recompose_F = shape => {
+const _recompose2: (shape: any) => any = shape => {
   const mustReturn =
     Array.isArray(shape) || typeof shape !== 'object' || shape === null;
   if (mustReturn) return shape;
@@ -87,6 +110,7 @@ const _recompose2: _Recompose_F = shape => {
   }, {} as any);
 };
 
-export const recompose: Recomposer = shape => _recompose(shape);
+export const recompose: Recomposer = (shape, options) =>
+  _recompose(shape, options);
 recompose.low = _recompose;
 recompose.strict = _recompose;

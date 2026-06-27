@@ -1,12 +1,12 @@
-import { this1 } from '@bemedev/build-tests/constants';
-import { createTests } from '@bemedev/vitest-extended';
+import { THIS1 } from '@bemedev/dev-utils/build-tests';
+import { createTests } from '@bemedev/dev-utils/vitest-extended';
 import { dumbFn, flatByKey1, TEST_SKIP } from './fixtures';
 
 describe.skipIf(TEST_SKIP)('flat', () => {
   const { acceptation, success } = createTests.withImplementation(dumbFn, {
     name: 'flatByKey',
     instanciation: async () => {
-      const func = await import(this1).then(({ flatByKey }) => flatByKey);
+      const func = await import(THIS1).then(({ flatByKey }) => flatByKey);
 
       return func.low;
     },

@@ -257,7 +257,7 @@ export type Decompose<
     ? O['sep']
     : DefaultDecomposeOptions['sep'],
 > =
-  _Decompose<T, O, sep> extends infer D extends {}
+  _Decompose<T, O, sep> extends infer D extends EmptyObject
     ? ReduceParentsKeys<D, sep> extends infer RPK extends Record<
         keyof D,
         boolean
@@ -354,9 +354,10 @@ export type Ru = Record<string, unknown>;
 
 export type UnionKeys<U> = U extends Record<infer K, any> ? K : never;
 
-type SplitSeparator<S extends string> = S extends `${infer A}.${string}`
-  ? A
-  : S;
+type SplitSeparator<
+  S extends string,
+  sep extends string = '.',
+> = S extends `${infer A}${sep}${string}` ? A : S;
 
 // Simple tuple creation for arrays up to 10 elements
 
@@ -364,32 +365,56 @@ export type IndexString = `[${number}]`;
 
 // #endregion
 
-type _Recompose<T extends Ru> = {
+type CleanKey<
+  Key extends string,
+  sep extends string,
+  start extends boolean,
+> = start extends true
+  ? Key extends `${sep}${infer Rest}`
+    ? Rest
+    : Key
+  : Key;
+
+type CleanT<T extends Ru, sep extends string, start extends boolean> = {
+  [K in keyof T as CleanKey<K & string, sep, start>]: T[K];
+};
+
+type _Recompose<T extends Ru, sep extends string = '.'> = {
   [key in keyof T as SplitSeparator<
-    key & string
+    key & string,
+    sep
   >]: types._UnionToIntersection1<
-    key extends `${string}.${infer A}`
-      ? A extends `${string}.${string}`
-        ? _Recompose<Record<A, T[key]>>
+    key extends `${string}${sep}${infer A}`
+      ? A extends `${string}${sep}${string}`
+        ? _Recompose<Record<A, T[key]>, sep>
         : Record<A, T[key]>
       : T[key]
   >;
 };
 
-export type Recompose<T extends Ru> = Recompose3<_Recompose<T>>;
-
-export type Compare<T, U> = T extends U
-  ? U extends T
-    ? true
-    : false
-  : false;
-
-export type Recompose3<T extends types.To> = keyof T extends never
+type Recompose3<T extends types.To> = keyof T extends never
   ? NonNullable<unknown>
   : keyof T extends IndexString
     ? types.ValuesOf<T>[]
     : {
         [K in keyof T]: T[K] extends types.To ? Recompose3<T[K]> : T[K];
       };
+
+export type Recompose<
+  T extends Ru,
+  O extends DecomposeOptions = DefaultDecomposeOptions,
+  sep extends string = O['sep'] extends string
+    ? O['sep']
+    : DefaultDecomposeOptions['sep'],
+  start extends boolean = O['start'] extends boolean
+    ? O['start']
+    : DefaultDecomposeOptions['start'],
+> = Recompose3<_Recompose<CleanT<T, sep, start>, sep>>;
+
+export type Compare<T, U> = T extends U
+  ? U extends T
+    ? true
+    : false
+  : false;
 
 // #endregion

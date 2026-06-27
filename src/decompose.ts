@@ -99,7 +99,6 @@ const _decompose: _Decompose_F = (val, options) => {
   return output;
 };
 
-/* v8 ignore next 1 */
 export const decompose: Decomposer = (val, options) =>
   _decompose(val, options);
 decompose.low = decompose;

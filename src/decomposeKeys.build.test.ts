@@ -1,12 +1,12 @@
-import { this1 } from '@bemedev/build-tests/constants';
-import { createTests } from '@bemedev/vitest-extended';
+import { THIS1 } from '@bemedev/dev-utils/build-tests';
+import { createTests } from '@bemedev/dev-utils/vitest-extended';
 import { dumbFn, TEST_SKIP, ttest0, ttest1, ttest2 } from './fixtures';
 
 describe.skipIf(TEST_SKIP)('decomposeKeys', () => {
   const { acceptation, success } = createTests.withImplementation(dumbFn, {
     name: 'decomposeSV',
     instanciation: async () => {
-      const func = await import(this1).then(
+      const func = await import(THIS1).then(
         ({ decomposeKeys }) => decomposeKeys,
       );
 
