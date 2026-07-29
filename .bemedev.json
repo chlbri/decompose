@@ -1,0 +1,15 @@
+{
+  "version": "1.0.0",
+  "path": "libs/bemedev",
+  "files": [
+    "features/arrays/types",
+    "features/common/types",
+    "features/functions/types",
+    "features/objects/types",
+    "globals/types",
+    "features/common/castings/any",
+    "globals/utils/castFn",
+    "globals/utils/_unknown",
+    "globals/utils/expandFn"
+  ]
+}

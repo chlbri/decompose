@@ -1,8 +1,10 @@
-import { castings } from '@bemedev/types';
+import _any from '#bemedev/features/common/castings/any';
+import type { TrueObject } from '#bemedev/globals/types';
+import { _unknown } from '#bemedev/globals/utils/_unknown';
 import { DELIMITER } from './constants/strings';
 import { isPrimitive } from './helpers';
 import { sortMap } from './sortMap';
-import type { KeysMatching, Ru } from './types.types';
+import type { KeysMatching } from './types.types';
 
 function ddecomposeKeys(val: any, prev = '', addObjectKeys = true) {
   const _prev = prev ? prev + DELIMITER : '';
@@ -24,7 +26,7 @@ function ddecomposeKeys(val: any, prev = '', addObjectKeys = true) {
 }
 
 type DecomposeKeys_F = <
-  T extends Ru,
+  T extends TrueObject,
   AddObjectKeys extends boolean = true,
 >(
   val: T,
@@ -59,8 +61,7 @@ export const decomposeKeys: DecomposeKeys = (
   sorter,
   addObjectKeys,
 ) => {
-  return castings.commons.any(_decomposeKeys(val, sorter, addObjectKeys));
+  return _any(_decomposeKeys(val, sorter, addObjectKeys));
 };
 decomposeKeys.low = _decomposeKeys;
-decomposeKeys.strict =
-  castings.commons.unknown<DecomposeKeys_F>(_decomposeKeys);
+decomposeKeys.strict = _unknown<DecomposeKeys_F>(_decomposeKeys);

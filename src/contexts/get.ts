@@ -1,7 +1,7 @@
 import { DEFAULT_OPTIONS } from './constants';
 import { decompose } from '../decompose';
 import type { Decompose, DecomposeOptions, Ru } from '../types.types';
-import type { NotUndefined } from '@bemedev/types/lib/types/commons.types';
+import type { NotUndefined } from '#bemedev/globals/types';
 
 // #region type GetByKey_F
 export type GetByKey_F = <

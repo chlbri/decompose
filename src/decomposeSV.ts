@@ -1,4 +1,5 @@
-import { castings } from '@bemedev/types';
+import _any from '#bemedev/features/common/castings/any';
+import { _unknown } from '#bemedev/globals/utils/_unknown';
 import { DELIMITER } from './constants/strings';
 import { sortMap } from './sortMap';
 import type { StateMatching, StateValue } from './types.types';
@@ -41,7 +42,7 @@ const _decomposeSV: _DecomposeSV_F = (val, sorter = sortMap) => {
 };
 
 export const decomposeSV: DecomposeSV = (val, sorter) => {
-  return castings.commons.any(_decomposeSV(val, sorter));
+  return _any(_decomposeSV(val, sorter));
 };
 decomposeSV.low = _decomposeSV;
-decomposeSV.strict = castings.commons.unknown<DecomposeSV_F>(_decomposeSV);
+decomposeSV.strict = _unknown<DecomposeSV_F>(_decomposeSV);

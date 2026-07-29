@@ -7,6 +7,27 @@ All notable changes to this project will be documented in this file.
 <details>
 <summary>
 
+## **[2.3.0] - 29/07/2026** => _13:52_
+
+</summary>
+
+- Fix: add `any` type guards (`0 extends 1 & Tk` and `0 extends 1 & A`) in
+  `__Decompose` and `_DecomposeTupleElement` to prevent infinite recursion
+  and malformed type unions on `any` properties or array elements
+- Add: unit tests for named type imports and `any` property/array
+  decomposition in `types.types.test-d.ts`
+- Refactor: replace namespace import `import type * as types` from
+  `#bemedev/globals/types` with explicit named type imports across
+  `src/types.types.ts`
+- <u>Test coverage **_100%_**</u>
+
+</details>
+
+<br/>
+
+<details>
+<summary>
+
 ## **[2.2.0] - 26/03/2026** => _15:54_
 
 </summary>

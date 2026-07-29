@@ -1,11 +1,8 @@
-import type { types } from '@bemedev/types';
+import type { Ru, PickKeysBy } from '#bemedev/globals/types';
 import { DEFAULT_FLAT_OPTIONS } from './constants';
 import type { FlatByKey, FlatOptions } from './types.types';
 
-type Flat_F = <
-  T extends types.Ru,
-  omit extends types.PickKeysBy<T, object> & string,
->(
+type Flat_F = <T extends Ru, omit extends PickKeysBy<T, object> & string>(
   val: T,
   omitKey: omit,
   options?: FlatOptions,
