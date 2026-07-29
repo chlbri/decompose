@@ -1,4 +1,12 @@
+packages:
+  - 'packages/decompose'
+
 allowBuilds:
   esbuild: true
-onlyBuiltDependencies:
-  - esbuild
+
+nodeLinker: hoisted
+
+minimumReleaseAge: 300
+
+minimumReleaseAgeExclude:
+  - '@bemedev/*'

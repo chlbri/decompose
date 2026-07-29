@@ -1,42 +1,26 @@
-import { exclude } from '@bemedev/dev-utils/vitest-exclude';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
+  server: { host: '0.0.0.0' },
   resolve: {
     tsconfigPaths: true,
   },
-  plugins: [
-    exclude({
-      ignoreCoverageFiles: [
-        '**/index.ts',
-        '**/types.ts',
-        '**/*.example.ts',
-        '**/*.types.ts',
-        '**/*.typegen.ts',
-        '**/*.fixtures.ts',
-        '**/fixtures.ts',
-        '**/fixture.ts',
-        '**/*.fixture.ts',
-        'src/contexts/constants.ts',
-      ],
-    }),
-  ],
 
   test: {
-    bail: 35,
     maxConcurrency: 10,
     passWithNoTests: true,
     slowTestThreshold: 3000,
+    bail: 35,
     globals: true,
     logHeapUsage: true,
 
-    typecheck: {
-      enabled: true,
-      ignoreSourceErrors: false,
-    },
     coverage: {
       enabled: true,
+      reportsDirectory: '.coverage',
       provider: 'v8',
+      exclude: ['*.js', '*.cjs', '*.mjs'],
     },
+
+    projects: ['packages/decompose/vitest.config.ts'],
   },
 });

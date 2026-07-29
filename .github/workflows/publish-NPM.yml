@@ -16,5 +16,5 @@ jobs:
         ${{ github.ref_name == 'beta' && 'beta' || github.ref_name ==
         'canary' && 'canary' || 'latest' }}
         
-      package: '.'
+      package: './packages/decompose'
     
