@@ -15,3 +15,6 @@ jobs:
       type:
         ${{ github.ref_name == 'beta' && 'beta' || github.ref_name ==
         'canary' && 'canary' || 'latest' }}
+        
+      package: '.'
+    
